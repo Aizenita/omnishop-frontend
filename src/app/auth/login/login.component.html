@@ -1,0 +1,16 @@
+<!-- src/app/auth/login/login.component.html -->
+<div class="card">
+    <h2>Iniciar sesión</h2>
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+      <div class="p-field">
+        <label>Email</label>
+        <input type="text" pInputText formControlName="email" />
+      </div>
+      <div class="p-field">
+        <label>Contraseña</label>
+        <input type="password" pPassword formControlName="password" />
+      </div>
+      <p-button type="submit" label="Entrar" [disabled]="loginForm.invalid"></p-button>
+    </form>
+  </div>
+  
