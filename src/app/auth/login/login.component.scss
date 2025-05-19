@@ -1,0 +1,32 @@
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f9f9f9;
+  }
+  
+  .login-card {
+    width: 360px;
+    padding: 2rem;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+  }
+  
+  .logo {
+    width: 100px;
+    margin-bottom: 1rem;
+  }
+  
+  .p-field {
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+  
+  .register-link {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+  

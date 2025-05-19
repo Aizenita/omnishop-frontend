@@ -1,16 +1,26 @@
-<!-- src/app/auth/login/login.component.html -->
-<div class="card">
-    <h2>Iniciar sesión</h2>
-    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
-      <div class="p-field">
-        <label>Email</label>
-        <input type="text" pInputText formControlName="email" />
-      </div>
-      <div class="p-field">
-        <label>Contraseña</label>
-        <input type="password" pPassword formControlName="password" />
-      </div>
-      <p-button type="submit" label="Entrar" [disabled]="loginForm.invalid"></p-button>
-    </form>
+<div class="login-wrapper">
+    <div class="login-card">
+      <img src="assets/logo-omnishop.png" alt="OmniShop Logo" style="width: 120px; margin-bottom: 1rem;" />
+      <h2>Iniciar sesión</h2>
+  
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="p-field">
+          <label for="email">Email</label>
+          <input id="email" type="text" pInputText formControlName="email" />
+        </div>
+  
+        <div class="p-field">
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" pPassword formControlName="password" />
+        </div>
+  
+        <button type="submit" pButton label="Entrar" [disabled]="loginForm.invalid"></button>
+      </form>
+  
+      <p class="register-link">
+        ¿No tienes cuenta?
+        <a routerLink="/register">Regístrate</a>
+      </p>
+    </div>
   </div>
   

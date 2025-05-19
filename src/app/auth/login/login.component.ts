@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators,FormGroup } from '@angular
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { Router } from '@angular/router';
+import { Router,RouterModule  } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
@@ -15,9 +15,11 @@ import { AuthService } from '../../shared/services/auth.service';
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
-    PasswordModule
+    PasswordModule,
+    RouterModule 
   ],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   loginForm!: FormGroup; 
