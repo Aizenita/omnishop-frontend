@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Product, ProductService } from '../../../shared/services/product.service';
+import { Product, ProductService } from '../../shared/services/product.service';
 import { Observable, of, EMPTY } from 'rxjs'; // EMPTY para catchError
 import { catchError } from 'rxjs/operators';
 
