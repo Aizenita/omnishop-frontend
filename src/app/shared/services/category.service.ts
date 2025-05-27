@@ -8,6 +8,7 @@ import { Category } from '../models/category.model'; // Asegúrate que la ruta d
   providedIn: 'root'
 })
 export class CategoryService {
+
   private apiUrl = 'api/categorias'; // Endpoint para las categorías
   // private mockCategories: Category[] = [
   //   { id: 1, nombre: 'Informática (Mock)' },

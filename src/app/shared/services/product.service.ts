@@ -43,4 +43,15 @@ export class ProductService {
       })
     );
   }
+
+  public getProductById(id: number): Observable<Product> {
+    const url = `${this.apiUrl}/${id}`; // Construye la URL para el producto específico
+    return this.http.get<Product>(url).pipe(
+      catchError((error) => {
+        console.error(`Error fetching product with id=${id} from API:`, error);
+        return EMPTY; // Devuelve un observable vacío en caso de error
+
+      })
+    );
+  }
 }

@@ -1,0 +1,25 @@
+<div class="product-detail-container" *ngIf="product$ | async as product; else loadingOrNotFound">
+  <header>
+    <h2>{{ product.nombre }}</h2>
+  </header>
+  <section class="product-content">
+    <div class="product-image">
+      <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre">
+    </div>
+    <div class="product-info">
+      <p class="description">{{ product.descripcion }}</p>
+      <p class="price">Precio: {{ product.precio | currency:'USD':'symbol' }}</p>
+      <p class="stock" *ngIf="product.stock !== undefined">Stock: {{ product.stock }} unidades</p>
+      <p *ngIf="product.destacado" class="highlight">¡Producto destacado!</p>
+    </div>
+  </section>
+  <footer>
+    <button [routerLink]="['/']">Volver a la tienda</button>
+  </footer>
+</div>
+
+<ng-template #loadingOrNotFound>
+  <p>Cargando producto o producto no encontrado...</p>
+  <!-- Se puede mejorar para diferenciar entre "cargando" y "no encontrado" -->
+  <!-- Por ejemplo, si product$ emite un valor específico para "no encontrado" vs. "aún cargando" -->
+</ng-template>
