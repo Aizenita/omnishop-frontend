@@ -4,7 +4,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Product, ProductService } from '../../../shared/services/product.service';
 import { Observable, of, EMPTY } from 'rxjs'; // EMPTY para catchError
 import { catchError } from 'rxjs/operators';
-
 // Importaciones PrimeNG
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
