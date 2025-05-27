@@ -16,8 +16,17 @@
       <button>Search</button>
     </div>
     <div class="user-actions">
-      <a href="/login" class="nav-link">Login</a>
-      <a href="#" class="nav-link">Cart</a>
+      <ng-container *ngIf="!(isAuthenticated$ | async); else authenticatedUserActions">
+        <a routerLink="/login" class="nav-link">Login</a>
+        <a routerLink="/register" class="nav-link">Regístrate</a>
+      </ng-container>
+      <ng-template #authenticatedUserActions>
+        <span *ngIf="currentUser$ | async as user" class="user-greeting nav-link">
+          Hola, {{ user.nombre || user.email }}
+        </span>
+        <a href="#" (click)="logout(); $event.preventDefault()" class="nav-link">Logout</a>
+      </ng-template>
+      <a routerLink="/cart" class="nav-link">Cart</a> <!-- Asumiendo que /cart es la ruta del carrito -->
     </div>
   </nav>
 </header>

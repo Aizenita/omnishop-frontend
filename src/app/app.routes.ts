@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register.component';
+import { RegisterComponent } from './auth/register/register.component'; // Ruta corregida
 import { LandingPageComponent } from './features/landing/landing-page/landing-page.component';
 import { ProductDetailComponent } from './features/product-detail/product-detail.component';
 
