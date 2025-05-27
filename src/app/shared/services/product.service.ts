@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs'; // Asegúrate de importar EMPTY
 import { catchError } from 'rxjs/operators';
 
 export interface Product {
@@ -24,18 +24,32 @@ export interface Product {
 })
 export class ProductService {
   private apiUrl = 'api/products';
-  private mockProducts: Product[] = [
-    { id: 1, nombre: 'Sample Product 1 (Mock)', precio: 10.99, descripcion: 'Description 1', imagen: 'image1.jpg', categoriaId: 1, stock: 10, visible: true, destacado: true },
-    { id: 2, nombre: 'Sample Product 2 (Mock)', precio: 20.49, descripcion: 'Description 2', imagen: 'image2.jpg', categoriaId: 2, stock: 5, visible: false, destacado: true }
-  ];
+  // mockProducts ya no es necesario aquí para el flujo principal,
+  // pero puedes dejarlo comentado por si se necesita para pruebas futuras.
+  // private mockProducts: Product[] = [
+    // { id: 1, nombre: 'Sample Product 1 (Mock)', /* ...otros campos... */ visible: true, destacado: true, stock: 10, creadoPor: "mock", modificadoPor: "mock", fechaCreacion: new Date(), fechaModificacion: new Date() },
+    // { id: 2, nombre: 'Sample Product 2 (Mock)', /* ...otros campos... */ visible: true, destacado: false, stock: 5, creadoPor: "mock", modificadoPor: "mock", fechaCreacion: new Date(), fechaModificacion: new Date() }
+  // ];
+
 
   constructor(private http: HttpClient) { }
 
   public getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl).pipe(
       catchError((error) => {
-        console.warn('Error fetching products from API, returning mock data instead:', error);
-        return of(this.mockProducts);
+        console.error('Error fetching products from API:', error); // Usar console.error para errores
+        // alert('Failed to fetch products. Please check backend connection.'); // Opcional: alertar al usuario
+        return EMPTY; // Devuelve un observable que completa sin emitir valores
+      })
+    );
+  }
+
+  public getProductById(id: number): Observable<Product> {
+    const url = `${this.apiUrl}/${id}`; // Construye la URL para el producto específico
+    return this.http.get<Product>(url).pipe(
+      catchError((error) => {
+        console.error(`Error fetching product with id=${id} from API:`, error);
+        return EMPTY; // Devuelve un observable vacío en caso de error
       })
     );
   }

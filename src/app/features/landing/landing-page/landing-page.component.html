@@ -34,7 +34,7 @@
     <div *ngIf="products && products.length > 0; else noProducts" class="products-grid">
       <div *ngFor="let product of products" class="product-item">
         <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
-        <h3>{{ product.nombre }}</h3>
+        <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-description">{{ product.descripcion }}</p>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
         <button class="add-to-cart-button">Add to Cart</button>
@@ -50,7 +50,7 @@
     <div *ngIf="specialOfferProducts && specialOfferProducts.length > 0; else noSpecialOffers" class="offers-grid">
       <div *ngFor="let product of specialOfferProducts" class="product-item">
         <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
-        <h3>{{ product.nombre }}</h3>
+        <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
         <button class="add-to-cart-button">Add to Cart</button>
       </div>

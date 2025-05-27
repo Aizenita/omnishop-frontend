@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router'; // Import RouterLink
 import { Product, ProductService } from '../../../shared/services/product.service'; // Adjusted path
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../shared/services/category.service';
@@ -7,7 +8,7 @@ import { CategoryService } from '../../../shared/services/category.service';
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule], // CommonModule for *ngFor, CurrencyPipe etc.
+  imports: [CommonModule, RouterLink], // Add RouterLink here
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
