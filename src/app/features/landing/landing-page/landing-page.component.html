@@ -7,9 +7,8 @@
     <div class="categories">
       <button class="category-button">Categories</button>
       <div class="category-dropdown-content" style="display: none;">
-        <a href="#">Category 1</a>
-        <a href="#">Category 2</a>
-        <a href="#">Category 3</a>
+        <p *ngIf="!categories || categories.length === 0">Loading categories...</p>
+        <a *ngFor="let category of categories" href="#">{{ category.nombre }}</a>
       </div>
     </div>
     <div class="search-bar">
@@ -48,9 +47,17 @@
 
   <section class="special-offers offers">
     <h2>Special Offers</h2>
-    <div class="offers-grid">
-      <p>Loading special offers...</p>
+    <div *ngIf="specialOfferProducts && specialOfferProducts.length > 0; else noSpecialOffers" class="offers-grid">
+      <div *ngFor="let product of specialOfferProducts" class="product-item">
+        <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
+        <h3>{{ product.nombre }}</h3>
+        <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
+        <button class="add-to-cart-button">Add to Cart</button>
+      </div>
     </div>
+    <ng-template #noSpecialOffers>
+      <p>No special offers available at the moment. Please check back later.</p>
+    </ng-template>
   </section>
 
   <section class="categories-preview">
