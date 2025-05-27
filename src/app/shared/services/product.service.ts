@@ -23,7 +23,7 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'api/products';
+  private apiUrl = 'api/productos';
   // mockProducts ya no es necesario aquí para el flujo principal,
   // pero puedes dejarlo comentado por si se necesita para pruebas futuras.
   // private mockProducts: Product[] = [
@@ -50,6 +50,7 @@ export class ProductService {
       catchError((error) => {
         console.error(`Error fetching product with id=${id} from API:`, error);
         return EMPTY; // Devuelve un observable vacío en caso de error
+
       })
     );
   }
