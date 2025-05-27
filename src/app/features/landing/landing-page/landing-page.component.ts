@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router'; // Import Router and RouterLink
+import { Router, RouterLink } from '@angular/router'; // RouterLink is fine, RouterModule is for module-based setup or routing config
 import { Observable } from 'rxjs';
 import { Product, ProductService } from '../../../shared/services/product.service';
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../shared/services/category.service';
-import { AuthService, UserIdentity } from '../../../shared/services/auth.service'; // Import AuthService and UserIdentity
+import { AuthService, UserIdentity } from '../../../shared/services/auth.service';
+import { ButtonModule } from 'primeng/button'; // Import ButtonModule
 
 @Component({
   selector: 'app-landing-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ButtonModule], // Add ButtonModule here
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
