@@ -1,0 +1,73 @@
+<header class="landing-header">
+  <nav class="navbar">
+    <div class="logo">
+      <img src="assets/logo-omnishop.png" alt="OmniShop Logo">
+      <span>OmniShop</span>
+    </div>
+    <div class="categories">
+      <button class="category-button">Categories</button>
+      <div class="category-dropdown-content" style="display: none;">
+        <a href="#">Category 1</a>
+        <a href="#">Category 2</a>
+        <a href="#">Category 3</a>
+      </div>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search products...">
+      <button>Search</button>
+    </div>
+    <div class="user-actions">
+      <a href="/login" class="nav-link">Login</a>
+      <a href="#" class="nav-link">Cart</a>
+    </div>
+  </nav>
+</header>
+
+<main class="landing-main">
+  <section class="hero-section">
+    <h1>Welcome to OmniShop</h1>
+    <p>Your one-stop shop for everything amazing!</p>
+    <a href="#" class="cta-button">Shop Now</a>
+  </section>
+
+  <section class="featured-products product-list">
+    <h2>Featured Products</h2>
+    <div *ngIf="products && products.length > 0; else noProducts" class="products-grid">
+      <div *ngFor="let product of products" class="product-item">
+        <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
+        <h3>{{ product.nombre }}</h3>
+        <p class="product-description">{{ product.descripcion }}</p>
+        <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
+        <button class="add-to-cart-button">Add to Cart</button>
+      </div>
+    </div>
+    <ng-template #noProducts>
+      <p>No products available at the moment. Please check back later.</p>
+    </ng-template>
+  </section>
+
+  <section class="special-offers offers">
+    <h2>Special Offers</h2>
+    <div class="offers-grid">
+      <p>Loading special offers...</p>
+    </div>
+  </section>
+
+  <section class="categories-preview">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+        <div class="category-item">Category A</div>
+        <div class="category-item">Category B</div>
+        <div class="category-item">Category C</div>
+    </div>
+  </section>
+</main>
+
+<footer class="landing-footer">
+  <p>&copy; 2024 OmniShop. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#">About Us</a>
+    <a href="#">Contact</a>
+    <a href="#">Privacy Policy</a>
+  </div>
+</footer>
