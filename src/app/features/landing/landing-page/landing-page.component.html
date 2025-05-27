@@ -17,16 +17,16 @@
     </div>
     <div class="user-actions">
       <ng-container *ngIf="!(isAuthenticated$ | async); else authenticatedUserActions">
-        <a routerLink="/login" class="nav-link">Login</a>
-        <a routerLink="/register" class="nav-link">Regístrate</a>
+        <a pButton routerLink="/login" label="Login" styleClass="p-button-text"></a>
+        <a pButton routerLink="/register" label="Regístrate" styleClass="p-button-text p-button-raised p-button-success"></a>
       </ng-container>
       <ng-template #authenticatedUserActions>
         <span *ngIf="currentUser$ | async as user" class="user-greeting nav-link">
-          Hola, {{ user.nombre || user.email }}
+          Hola, {{ user.nombre || user.email }} 
         </span>
-        <a href="#" (click)="logout(); $event.preventDefault()" class="nav-link">Logout</a>
+        <button pButton type="button" label="Logout" icon="pi pi-sign-out" (click)="logout()" styleClass="p-button-text p-button-danger"></button>
       </ng-template>
-      <a routerLink="/cart" class="nav-link">Cart</a> <!-- Asumiendo que /cart es la ruta del carrito -->
+      <a pButton routerLink="/cart" label="Carrito" icon="pi pi-shopping-cart" styleClass="p-button-text p-button-secondary"></a>
     </div>
   </nav>
 </header>

@@ -1,25 +1,57 @@
-<div class="product-detail-container" *ngIf="product$ | async as product; else loadingOrNotFound">
-  <header>
-    <h2>{{ product.nombre }}</h2>
-  </header>
-  <section class="product-content">
-    <div class="product-image">
-      <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre">
-    </div>
-    <div class="product-info">
-      <p class="description">{{ product.descripcion }}</p>
-      <p class="price">Precio: {{ product.precio | currency:'USD':'symbol' }}</p>
-      <p class="stock" *ngIf="product.stock !== undefined">Stock: {{ product.stock }} unidades</p>
-      <p *ngIf="product.destacado" class="highlight">¡Producto destacado!</p>
-    </div>
-  </section>
-  <footer>
-    <button [routerLink]="['/']">Volver a la tienda</button>
-  </footer>
-</div>
+<div class="product-detail-page-container">
+  <ng-container *ngIf="product$ | async as product; else loadingOrNotFound">
+    <p-card [header]="product.nombre" styleClass="product-detail-card">
+      <ng-template pTemplate="header">
+        <!-- Opcional: Si quieres una imagen como parte del header de la tarjeta -->
+        <!-- <img [alt]="product.nombre" [src]="product.imagen || 'assets/placeholder-image.png'" /> -->
+      </ng-template>
+      
+      <div class="grid product-layout">
+        <div class="col-12 md:col-6 image-section">
+          <p-image 
+            [src]="product.imagen || 'assets/placeholder-image.png'" 
+            [alt]="product.nombre" 
+            width="100%" 
+            [preview]="true" 
+            imageStyleClass="product-main-image">
+          </p-image>
+        </div>
+        <div class="col-12 md:col-6 info-section">
+          <h3>Descripción</h3>
+          <p>{{ product.descripcion }}</p>
+          
+          <h4 class="price">Precio: {{ product.precio | currency:'USD':'symbol' }}</h4>
+          
+          <p class="stock" *ngIf="product.stock !== undefined">
+            Disponibilidad: {{ product.stock > 0 ? product.stock + ' unidades en stock' : 'Agotado' }}
+          </p>
+          
+          <p *ngIf="product.destacado" class="highlight">
+            <i class="pi pi-star-fill"></i> ¡Producto destacado!
+          </p>
+          
+          <!-- Aquí podrías añadir más detalles como categoría, etc. -->
+        </div>
+      </div>
 
-<ng-template #loadingOrNotFound>
-  <p>Cargando producto o producto no encontrado...</p>
-  <!-- Se puede mejorar para diferenciar entre "cargando" y "no encontrado" -->
-  <!-- Por ejemplo, si product$ emite un valor específico para "no encontrado" vs. "aún cargando" -->
-</ng-template>
+      <ng-template pTemplate="footer">
+        <button pButton type="button" label="Volver a la tienda" icon="pi pi-arrow-left" routerLink="/" styleClass="p-button-secondary"></button>
+        <!-- Futuro botón de añadir al carrito:
+        <button pButton type="button" label="Añadir al Carrito" icon="pi pi-shopping-cart" class="p-button-success p-ml-2" [disabled]="product.stock === 0"></button> 
+        -->
+      </ng-template>
+    </p-card>
+  </ng-container>
+
+  <ng-template #loadingOrNotFound>
+    <div class="p-d-flex p-jc-center p-ai-center" style="height: 300px;">
+      <p-progressSpinner *ngIf="!(product$ | async) === undefined" ariaLabel="Cargando"></p-progressSpinner>
+      <div *ngIf="(product$ | async) === undefined && this.route.snapshot.paramMap.get('id')" class="p-text-center"> 
+         <!-- Esta lógica de product$ async undefined es un poco compleja para el template, el toast ya informa del error -->
+         <p>Producto no encontrado o no disponible.</p>
+         <button pButton type="button" label="Volver a la tienda" icon="pi pi-arrow-left" routerLink="/" styleClass="p-button-secondary p-mt-2"></button>
+      </div>
+    </div>
+  </ng-template>
+  <p-toast></p-toast>
+</div>
