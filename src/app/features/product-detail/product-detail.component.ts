@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router'; // RouterModule para routerLink
-import { Product, ProductService } from '../../../shared/services/product.service';
+import { Product, ProductService } from '../../shared/services/product.service';
 import { Observable, of } from 'rxjs'; // 'of' para el caso de id no válido
 
 @Component({
