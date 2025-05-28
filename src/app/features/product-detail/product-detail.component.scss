@@ -57,11 +57,23 @@
   // Ejemplo si los botones están directamente en el footer:
   ::ng-deep .p-card-footer { // Usar ::ng-deep con precaución, o definir estilos globales.
     display: flex;
-    justify-content: flex-end;
-    gap: .5rem;
-    padding-top: 1rem !important; // Forzar padding si es necesario
-    border-top: 1px solid var(--surface-d) !important; // Forzar borde si es necesario
+    flex-direction: column; // Para apilar product-actions y el botón de volver
+    gap: 1rem; // Espacio entre el grupo de acciones y el botón de volver
+    padding-top: 1rem !important; 
+    border-top: 1px solid var(--surface-d) !important; 
   }
+}
+
+.product-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // Espacio entre input de cantidad y botón
+  
+  .p-inputnumber {
+    // Ajusta el ancho si es necesario, aunque PrimeNG suele manejarlo bien
+    // Ejemplo: width: 100px;
+  }
+  // El botón de añadir al carrito puede necesitar p-ml-2 o similar si no hay gap
 }
 
 // Para el spinner y mensaje de no encontrado

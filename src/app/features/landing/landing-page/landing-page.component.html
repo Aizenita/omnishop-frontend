@@ -26,7 +26,14 @@
         </span>
         <button pButton type="button" label="Logout" icon="pi pi-sign-out" (click)="logout()" styleClass="p-button-text p-button-danger"></button>
       </ng-template>
-      <a pButton routerLink="/cart" label="Carrito" icon="pi pi-shopping-cart" styleClass="p-button-text p-button-secondary"></a>
+      <a pButton routerLink="/cart" icon="pi pi-shopping-cart" styleClass="p-button-text p-button-secondary p-overlay-badge">
+        Carrito
+        <p-badge *ngIf="(cartItemCount$ | async) as count; else noItems" [value]="count" severity="danger"></p-badge>
+        <ng-template #noItems>
+          <!-- Opcional: si quieres un badge con '0' o nada, puedes dejar esto vacío o con un badge de valor 0 -->
+          <!-- <p-badge [value]="0" severity="info"></p-badge> -->
+        </ng-template>
+      </a>
     </div>
   </nav>
 </header>
