@@ -24,7 +24,7 @@
               <td>
                 <p-inputNumber 
                     [ngModel]="item.cantidad" 
-                    (onInput)="updateItemQuantity(item, $event.value)"
+                    (ngModelChange)="updateItemQuantity(item, $event)"
                     [min]="0" [max]="100" mode="decimal" [showButtons]="true"
                     inputId="horizontal"></p-inputNumber> <!-- $event.value podría ser string, ajustar en .ts -->
               </td>
