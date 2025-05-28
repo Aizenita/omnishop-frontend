@@ -55,6 +55,6 @@ export class LandingPageComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']); // Navigate to login page after logout
+    this.router.navigate(['/login']);
   }
 }
