@@ -36,9 +36,7 @@ export class LandingPageComponent implements OnInit {
   ngOnInit(): void {
     this.productService.getProducts().subscribe(data => {
       this.products = data;
-      console.log('Productos recibidos en LandingPage (this.products):', this.products);
       this.specialOfferProducts = data.filter(product => product.destacado === true);
-      console.log('Productos destacados en LandingPage (this.specialOfferProducts):', this.specialOfferProducts);
     });
     this.categoryService.getCategories().subscribe(data => {
       this.categories = data;
