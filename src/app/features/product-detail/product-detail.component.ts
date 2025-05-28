@@ -8,10 +8,16 @@ import { catchError } from 'rxjs/operators';
 // Importaciones PrimeNG
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { ImageModule } from 'primeng/image'; // Opcional para p-image
+import { ImageModule } from 'primeng/image';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { ProgressSpinnerModule } from 'primeng/progressspinner'; // Añadido para p-progressSpinner
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { InputNumberModule } from 'primeng/inputnumber'; // Añadir InputNumberModule
+
+// Otros imports
+import { FormsModule } from '@angular/forms'; // Para ngModel
+import { CartService } from '../../../shared/services/cart.service'; // Importar CartService
+
 
 @Component({
   selector: 'app-product-detail',
@@ -21,21 +27,25 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner'; // Añadido par
     RouterModule,
     CardModule,
     ButtonModule,
-    ImageModule, // Opcional
+    ImageModule,
     ToastModule,
-    ProgressSpinnerModule // Añadido
+    ProgressSpinnerModule,
+    FormsModule,         // Añadir FormsModule
+    InputNumberModule    // Añadir InputNumberModule
   ],
-  providers: [MessageService], // Proveer MessageService
+  providers: [MessageService],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit {
   product$!: Observable<Product | undefined>;
+  quantity: number = 1; // Propiedad para la cantidad
 
   constructor(
-    public route: ActivatedRoute, // Visibilidad cambiada a public
+    public route: ActivatedRoute,
     private productService: ProductService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cartService: CartService // Inyectar CartService
   ) { }
 
   ngOnInit(): void {
@@ -51,7 +61,7 @@ export class ProductDetailComponent implements OnInit {
               summary: 'Error',
               detail: 'No se pudo cargar el producto. Inténtalo más tarde.'
             });
-            return of(undefined); // Devuelve undefined para que el template muestre 'loadingOrNotFound'
+            return of(undefined);
           })
         );
       } else {
@@ -70,5 +80,28 @@ export class ProductDetailComponent implements OnInit {
       detail: idParam ? `El ID de producto '${idParam}' no es válido.` : 'No se especificó un ID de producto.'
     });
     this.product$ = of(undefined);
+  }
+
+  addToCart(product: Product): void {
+    console.log('addToCart llamado con producto:', product); // <--- LOG 1
+    console.log('Cantidad a añadir:', this.quantity); // <--- LOG 2
+
+    if (product && product.id) { // Verifica también product.id por si acaso
+      console.log('Llamando a cartService.addItem...'); // <--- LOG 3
+      this.cartService.addItem(product, this.quantity);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Añadido',
+        detail: `${product.nombre} (x${this.quantity}) añadido al carrito.`
+      });
+      this.quantity = 1; // Resetear cantidad
+    } else {
+      console.error('Error: Producto inválido o sin ID en addToCart.', product); // <--- LOG 4 (Error)
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo añadir el producto al carrito. Datos del producto incompletos.'
+      });
+    }
   }
 }

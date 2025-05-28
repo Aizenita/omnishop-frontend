@@ -35,10 +35,22 @@
       </div>
 
       <ng-template pTemplate="footer">
-        <button pButton type="button" label="Volver a la tienda" icon="pi pi-arrow-left" routerLink="/" styleClass="p-button-secondary"></button>
-        <!-- Futuro botón de añadir al carrito:
-        <button pButton type="button" label="Añadir al Carrito" icon="pi pi-shopping-cart" class="p-button-success p-ml-2" [disabled]="product.stock === 0"></button> 
-        -->
+        <div class="p-grid p-nogutter p-align-center product-actions">
+          <div class="p-col-fixed" style="width:130px">
+            <p-inputNumber [(ngModel)]="quantity" [min]="1" [max]="product.stock || 10" mode="decimal" [showButtons]="true" inputId="quantityInput"></p-inputNumber>
+          </div>
+          <div class="p-col p-ml-2">
+            <button pButton type="button" 
+                    label="Añadir al Carrito" 
+                    icon="pi pi-shopping-cart" 
+                    (click)="addToCart(product)" 
+                    [disabled]="(product.stock !== undefined && product.stock === 0) || quantity === 0 || !quantity"
+                    styleClass="p-button-success"></button>
+          </div>
+        </div>
+        <div class="p-mt-3"> <!-- Contenedor para el botón de volver, para que esté en otra línea o separado -->
+          <button pButton type="button" label="Volver a la tienda" icon="pi pi-arrow-left" routerLink="/" styleClass="p-button-secondary"></button>
+        </div>
       </ng-template>
     </p-card>
   </ng-container>

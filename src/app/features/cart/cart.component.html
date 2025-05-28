@@ -1,0 +1,64 @@
+<div class="cart-page-container p-m-2 p-lg-4">
+  <p-toast></p-toast>
+  <p-card header="Tu Carrito de Compras" styleClass="cart-summary-card">
+    <ng-container *ngIf="(cartItems$ | async) as items; else emptyCart">
+      <div *ngIf="items.length > 0; else emptyCart">
+        <p-table [value]="items" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="width:100px">Imagen</th>
+              <th>Producto</th>
+              <th>Precio Unit.</th>
+              <th style="width:150px">Cantidad</th>
+              <th>Total Línea</th>
+              <th style="width:100px">Acción</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item>
+            <tr>
+              <td>
+                <img [src]="item.imagen || 'assets/placeholder-image.png'" [alt]="item.nombre" class="cart-item-image" />
+              </td>
+              <td>{{ item.nombre }}</td>
+              <td>{{ item.precio | currency:'USD':'symbol' }}</td>
+              <td>
+                <p-inputNumber 
+                    [ngModel]="item.cantidad" 
+                    (onInput)="updateItemQuantity(item, $event.value)"
+                    [min]="0" [max]="100" mode="decimal" [showButtons]="true"
+                    inputId="horizontal"></p-inputNumber> <!-- $event.value podría ser string, ajustar en .ts -->
+              </td>
+              <td>{{ (item.precio * item.cantidad) | currency:'USD':'symbol' }}</td>
+              <td>
+                <button pButton type="button" icon="pi pi-trash" styleClass="p-button-danger p-button-sm" (click)="removeItemFromCart(item)"></button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+            <div class="p-grid p-nogutter p-justify-end">
+              <div class="p-col-6 p-md-3 p-text-right">
+                <strong>Subtotal ({{ cartService.getCartItemCount() | async }} items):</strong>
+              </div>
+              <div class="p-col-6 p-md-3 p-text-right">
+                <strong>{{ cartService.getCartSubtotal() | async | currency:'USD':'symbol' }}</strong>
+              </div>
+            </div>
+          </ng-template>
+        </p-table>
+
+        <div class="cart-actions p-d-flex p-jc-between p-mt-3">
+          <button pButton type="button" label="Vaciar Carrito" icon="pi pi-trash" styleClass="p-button-danger p-button-outlined" (click)="clearEntireCart()"></button>
+          <button pButton type="button" label="Proceder al Pago" icon="pi pi-credit-card" (click)="proceedToCheckout()" [disabled]="items.length === 0"></button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #emptyCart>
+      <div class="empty-cart-message p-text-center">
+        <i class="pi pi-shopping-cart" style="font-size: 3rem; color: var(--surface-400);"></i>
+        <p>Tu carrito está vacío.</p>
+        <button pButton type="button" label="Continuar Comprando" icon="pi pi-arrow-left" routerLink="/" styleClass="p-button-secondary"></button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>
