@@ -1,3 +1,4 @@
+<p-toast></p-toast> <!-- p-toast añadido -->
 <header class="landing-header">
   <nav class="navbar">
     <div class="logo">
@@ -53,7 +54,14 @@
         <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-description">{{ product.descripcion }}</p>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
-        <button class="add-to-cart-button">Add to Cart</button>
+        <!-- Botón "Add to Cart" original eliminado/comentado si es necesario -->
+        <div class="product-actions-footer">
+          <button pButton type="button" icon="pi pi-shopping-cart" 
+                  title="Añadir {{product.nombre}} al carrito"
+                  (click)="quickAddToCart(product)"
+                  [disabled]="(product.stock !== undefined && product.stock === 0)"
+                  styleClass="p-button-sm p-button-rounded p-button-warning"></button>
+        </div>
       </div>
     </div>
     <ng-template #noProducts>
@@ -68,7 +76,14 @@
         <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
         <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
-        <button class="add-to-cart-button">Add to Cart</button>
+        <!-- Botón "Add to Cart" original eliminado/comentado si es necesario -->
+        <div class="product-actions-footer">
+          <button pButton type="button" icon="pi pi-shopping-cart"
+                  title="Añadir {{product.nombre}} al carrito"
+                  (click)="quickAddToCart(product)"
+                  [disabled]="(product.stock !== undefined && product.stock === 0)"
+                  styleClass="p-button-sm p-button-rounded p-button-outlined"></button>
+        </div>
       </div>
     </div>
     <ng-template #noSpecialOffers>
