@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Product, ProductService } from '../../../shared/services/product.service';
+import { Product, ProductService } from '../../../shared/services/product.service'; // Product ya está importado
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../shared/services/category.service';
 import { AuthService, UserIdentity } from '../../../shared/services/auth.service';
@@ -19,7 +19,7 @@ import { MessageService } from 'primeng/api'
     CommonModule, 
     RouterLink, 
     ButtonModule,
-    BadgeModule,  // Añadir BadgeModule
+    BadgeModule,
     ToastModule  // AÑADIR ToastModule
   ],
   providers: [MessageService], // AÑADIR MessageService a providers
@@ -33,7 +33,7 @@ export class LandingPageComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   currentUser$: Observable<UserIdentity | null>;
-  cartItemCount$: Observable<number>; // Nueva propiedad
+  cartItemCount$: Observable<number>;
 
   constructor(
     private productService: ProductService,
@@ -42,11 +42,10 @@ export class LandingPageComponent implements OnInit {
     private cartService: CartService, // Inyectar CartService
     private router: Router,
     private messageService: MessageService // INYECTAR MessageService
-
   ) {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
     this.currentUser$ = this.authService.currentUser$;
-    this.cartItemCount$ = this.cartService.getCartItemCount(); // Asignar observable
+    this.cartItemCount$ = this.cartService.getCartItemCount();
   }
 
   ngOnInit(): void {
@@ -78,8 +77,28 @@ export class LandingPageComponent implements OnInit {
     }
   }
 
+  quickAddToCart(product: Product): void {
+    if (product && product.id) {
+      this.cartService.addItem(product, 1); // Añade 1 unidad por defecto
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Producto Añadido',
+        detail: `${product.nombre} ha sido añadido a tu carrito.`,
+        life: 3000 // Duración del toast en milisegundos
+      });
+    } else {
+      console.error('Intento de añadir producto inválido o sin ID:', product);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo añadir el producto al carrito.',
+        life: 3000
+      });
+    }
+  }
+
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login']); // Navigate to login page after logout
   }
 }
