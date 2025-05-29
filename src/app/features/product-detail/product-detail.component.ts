@@ -16,7 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber'; // Añadir InputNumberM
 
 // Otros imports
 import { FormsModule } from '@angular/forms'; // Para ngModel
-import { CartService } from '../../shared/services/cart.service'; // Importar CartService
+import { CartService } from '../../../shared/services/cart.service'; // Importar CartService
 
 
 @Component({

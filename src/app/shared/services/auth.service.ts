@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core'; // Añadir Injector
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map, switchMap } from 'rxjs/operators';
+import { CartService } from './cart.service'; // Mantener para type-hinting con injector.get
 
 // Interfaces will be defined at the end of the file as per the prompt
 
@@ -9,10 +10,10 @@ import { tap, catchError, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '/api/auth'; // El proxy se encargará de la URL base
+  private apiUrl = '/api/auth'; 
   private readonly TOKEN_KEY = 'authToken';
-  private readonly ROLE_KEY = 'authRole'; // Kept for potential direct role storage, though UserIdentity is preferred
-  private readonly USER_INFO_KEY = 'authUser'; // Para UserIdentity
+  private readonly ROLE_KEY = 'authRole'; 
+  private readonly USER_INFO_KEY = 'authUser'; 
 
   private currentUserSubject = new BehaviorSubject<UserIdentity | null>(this.getUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
@@ -20,33 +21,39 @@ export class AuthService {
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(!!this.getToken());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    // Si hay un token al iniciar y no hay UserIdentity, se podría validar con el endpoint /me.
-    // Si hay UserIdentity, asumimos que el token es válido para esa identidad hasta que una petición falle.
-    // Esta lógica se ha movido/refinado en la versión del prompt más reciente
-    // if (this.getToken() && !this.getCurrentUser()) {
-    //     this.fetchAndSetCurrentUser().subscribe({
-    //         error: (err) => console.error("Failed to fetch current user on init", err)
-    //     });
-    // }
-    // La inicialización de currentUserSubject y isAuthenticatedSubject ya maneja la carga desde localStorage.
-    // Si se necesita una validación activa del token al inicio, se puede agregar una llamada a fetchAndSetCurrentUser aquí,
-    // pero se debe manejar con cuidado para no bloquear la app o hacer llamadas innecesarias.
+  constructor(
+    private http: HttpClient,
+    private injector: Injector // Reemplaza CartService con Injector
+  ) {
+    // ... (la lógica de inicialización existente se mantiene)
   }
 
   login(credentials: AuthRequest): Observable<AuthResponse> {
-    // Lógica HTTP se implementará en el siguiente paso
-    // Ejemplo de cómo se verá:
-    // return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-    //   tap(response => this.setSession(response)), // Asumimos que el login también devuelve UserIdentity o lo obtenemos después
-    //   catchError(this.handleError)
-    // );
+    const cartService = this.injector.get(CartService); // Obtener CartService
+    const localCartItems = cartService.getLocalCartForMerge(); // Usar variable local
+
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
-        // setSession se encargará de guardar el token y luego llamar a fetchAndSetCurrentUser
         this.setSession(response); 
+        if (localCartItems && localCartItems.length > 0) {
+          console.log('AuthService: Iniciando fusión de carrito local con el backend...', localCartItems);
+          cartService.mergeLocalCartWithBackend(localCartItems).subscribe({ // Usar variable local
+            next: (mergedCartDto) => { 
+              if (mergedCartDto) {
+                console.log('AuthService: Fusión de carrito completada con éxito en backend.', mergedCartDto);
+                cartService.clearLocalCartData(); // Usar variable local
+              } else {
+                console.log('AuthService: Fusión de carrito no devolvió un carrito actualizado...');
+                cartService.clearLocalCartData(); // Usar variable local
+              }
+            },
+            error: err => console.error('AuthService: Error durante la fusión del carrito...', err)
+          });
+        } else {
+          console.log('AuthService: No hay carrito local para fusionar.');
+        }
       }),
-      catchError(this.handleError) // Manejo de errores centralizado
+      catchError(this.handleError)
     );
   }
 
@@ -111,13 +118,19 @@ export class AuthService {
   }
 
   logout(): void {
+    const cartService = this.injector.get(CartService); // Obtener CartService
+    console.log('AuthService: logout llamado.');
+
     localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.ROLE_KEY);
+    localStorage.removeItem(this.ROLE_KEY); 
     localStorage.removeItem(this.USER_INFO_KEY);
+
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
-    // Podría necesitarse redirigir con Router aquí o en el componente que llama a logout
-    console.log('AuthService: logout successful');
+
+    cartService.clearCart(); // Usar variable local
+
+    console.log('AuthService: Sesión y carrito local limpiados después de logout.');
   }
 
   getToken(): string | null {
