@@ -48,6 +48,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   onSubmit(): void {
+    // El resto del método existente:
+    // this.errorMessage = null; // Esta línea ya no existe si se usa MessageService
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
