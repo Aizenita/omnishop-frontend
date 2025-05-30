@@ -1,0 +1,36 @@
+.direccion-list-container {
+  padding: 20px;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2em;
+}
+
+.list-group-item {
+  &.border-primary {
+    border-width: 2px;
+  }
+  .direccion-actions {
+    white-space: nowrap; // Prevent buttons from wrapping on smaller screens
+  }
+}
+
+// Basic styling for buttons, assuming Bootstrap is used or similar global styles
+// .btn { margin-left: 5px; }
+// .mb-3 { margin-bottom: 1rem; }
+// .ms-2 { margin-left: 0.5rem; }
+// .me-2 { margin-right: 0.5rem; }
+// .d-flex { display: flex; }
+// .justify-content-between { justify-content: space-between; }
+// .align-items-center { align-items: center; }
+// .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+// .alert-danger { background-color: #f8d7da; color: #721c24; }
+// .alert-info { background-color: #d1ecf1; color: #0c5460; }
+// .list-group { list-style: none; padding-left: 0; }
+// .list-group-item { padding: 10px 15px; border: 1px solid #ddd; margin-bottom: -1px; } // Remove top border for subsequent items
+// .badge { display: inline-block; padding: .25em .4em; font-size: 75%; font-weight: 700; line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25rem; }
+// .bg-primary { background-color: #007bff !important; color: white; }
+
+// Add any component-specific styles here
