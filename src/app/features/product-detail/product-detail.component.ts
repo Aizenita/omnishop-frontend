@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Product, ProductService } from '../../../shared/services/product.service';
+import { Product, ProductService } from '../../shared/services/product.service';
 import { Observable, of, EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -16,7 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber'; // Añadir InputNumberM
 
 // Otros imports
 import { FormsModule } from '@angular/forms'; // Para ngModel
-import { CartService } from '../../../shared/services/cart.service'; // Importar CartService
+import { CartService } from '../../shared/services/cart.service'; // Importar CartService
 
 
 @Component({
