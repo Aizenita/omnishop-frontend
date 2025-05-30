@@ -7,10 +7,11 @@ import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../shared/services/category.service';
 import { AuthService, UserIdentity } from '../../../shared/services/auth.service';
 import { ButtonModule } from 'primeng/button';
-import { CartService } from '../../../shared/services/cart.service'; // Nueva importación
-import { BadgeModule } from 'primeng/badge'; // Nueva importación
+import { CartService } from '../../../shared/services/cart.service';
+import { BadgeModule } from 'primeng/badge';
 import { ToastModule } from 'primeng/toast'; // NUEVA importación
-import { MessageService } from 'primeng/api'
+import { MessageService } from 'primeng/api'; // NUEVA importación
+
 
 @Component({
   selector: 'app-landing-page',
@@ -19,7 +20,7 @@ import { MessageService } from 'primeng/api'
     CommonModule, 
     RouterLink, 
     ButtonModule,
-    BadgeModule,  // Añadir BadgeModule
+    BadgeModule,
     ToastModule  // AÑADIR ToastModule
   ],
   providers: [MessageService], // AÑADIR MessageService a providers
@@ -33,22 +34,19 @@ export class LandingPageComponent implements OnInit {
 
   isAuthenticated$: Observable<boolean>;
   currentUser$: Observable<UserIdentity | null>;
-  cartItemCount$: Observable<number>; // Nueva propiedad
+  cartItemCount$: Observable<number>;
 
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
     private authService: AuthService,
-    private cartService: CartService, // Inyectar CartService
+    private cartService: CartService,
     private router: Router,
-    private messageService: MessageService // INYECTAR MessageService
-
+    private messageService: MessageService 
   ) {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
     this.currentUser$ = this.authService.currentUser$;
-    this.cartItemCount$ = this.cartService.getCartItemCount().pipe(
-      tap(count => console.log('LandingPageComponent: cartItemCount$ emitió:', count))
-    );
+    this.cartItemCount$ = this.cartService.getCartItemCount(); // <--- ASÍ QUEDA
   }
 
   ngOnInit(): void {
@@ -63,7 +61,8 @@ export class LandingPageComponent implements OnInit {
      tap(count => console.log('LandingPageComponent: cartItemCount$ emitió:', count))
 );
   }
-   quickAddToCart(product: Product): void {
+
+  quickAddToCart(product: Product): void {
     if (product && product.id) {
       this.cartService.addItem(product, 1); // Añade 1 unidad por defecto
       this.messageService.add({
@@ -85,6 +84,6 @@ export class LandingPageComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login']); // Navigate to login page after logout
   }
 }

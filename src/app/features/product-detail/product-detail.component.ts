@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Product, ProductService } from '../../shared/services/product.service';
-import { Observable, of, EMPTY } from 'rxjs'; // EMPTY para catchError
+import { Product, ProductService } from '../../../shared/services/product.service';
+import { Observable, of, EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 // Importaciones PrimeNG
@@ -16,7 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber'; // Añadir InputNumberM
 
 // Otros imports
 import { FormsModule } from '@angular/forms'; // Para ngModel
-import { CartService } from '../../shared/services/cart.service'; // Importar CartService
+import { CartService } from '../../../shared/services/cart.service'; // Importar CartService
 
 
 @Component({
@@ -83,11 +83,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(product: Product): void {
-    console.log('addToCart llamado con producto:', product); // <--- LOG 1
-    console.log('Cantidad a añadir:', this.quantity); // <--- LOG 2
-
-    if (product && product.id) { // Verifica también product.id por si acaso
-      console.log('Llamando a cartService.addItem...'); // <--- LOG 3
+    if (product && product.id) {
       this.cartService.addItem(product, this.quantity);
       this.messageService.add({
         severity: 'success',
@@ -96,7 +92,7 @@ export class ProductDetailComponent implements OnInit {
       });
       this.quantity = 1; // Resetear cantidad
     } else {
-      console.error('Error: Producto inválido o sin ID en addToCart.', product); // <--- LOG 4 (Error)
+      // El console.error original se elimina, el messageService.add ya informa del error.
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
