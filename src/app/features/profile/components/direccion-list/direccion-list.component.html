@@ -1,49 +1,61 @@
 <div class="direccion-list-container">
-  <h2>Mis Direcciones de Envío</h2>
+  <p-messages [(value)]="msgs" [enableService]="false" [closable]="true"></p-messages>
 
-  <button (click)="agregarNuevaDireccion()" class="btn btn-primary mb-3">
-    Agregar Nueva Dirección
-  </button>
-
-  <div *ngIf="isLoading" class="loading-indicator">
-    Cargando direcciones...
+  <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
+    <h2>Mis Direcciones de Envío</h2>
+    <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus" 
+            class="p-button-success" (click)="agregarNuevaDireccion()"></button>
   </div>
 
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
-  <div *ngIf="!isLoading && !error && direcciones.length === 0" class="alert alert-info">
-    No tiene direcciones guardadas. ¡Agregue una!
-  </div>
-
-  <ul *ngIf="!isLoading && !error && direcciones.length > 0" class="list-group">
-    <li *ngFor="let dir of direcciones"
-        class="list-group-item d-flex justify-content-between align-items-center"
-        [class.border-primary]="dir.predeterminada">
-
-      <div>
-        <p class="mb-1">
-          <strong>{{ dir.calle }}</strong>
-          <span *ngIf="dir.predeterminada" class="badge bg-primary ms-2">Predeterminada</span>
-        </p>
-        <small>{{ dir.ciudad }}, {{ dir.cp }}, {{ dir.pais }}</small>
-      </div>
-
-      <div class="direccion-actions">
-        <button (click)="marcarComoPredeterminada(dir)"
-                *ngIf="!dir.predeterminada"
-                class="btn btn-sm btn-outline-success me-2"
-                title="Marcar como predeterminada">
-          Marcar Predeterminada
-        </button>
-        <button (click)="editarDireccion(dir.id)" class="btn btn-sm btn-outline-primary me-2" title="Editar">
-          Editar
-        </button>
-        <button (click)="eliminarDireccion(dir.id)" class="btn btn-sm btn-outline-danger" title="Eliminar">
-          Eliminar
-        </button>
-      </div>
-    </li>
-  </ul>
+  <p-table [value]="direcciones" [responsive]="true" [loading]="isLoading" 
+           dataKey="id" styleClass="p-datatable-striped p-datatable-gridlines">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Calle</th>
+        <th>Ciudad</th>
+        <th>CP</th>
+        <th>País</th>
+        <th style="width:10rem">Predeterminada</th>
+        <th style="width:15rem">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dir>
+      <tr>
+        <td>{{ dir.calle }}</td>
+        <td>{{ dir.ciudad }}</td>
+        <td>{{ dir.cp }}</td>
+        <td>{{ dir.pais }}</td>
+        <td>
+          <p-tag *ngIf="dir.predeterminada" severity="success" value="Sí"></p-tag>
+          <p-tag *ngIf="!dir.predeterminada" severity="info" value="No"></p-tag>
+        </td>
+        <td>
+          <button pButton pRipple *ngIf="!dir.predeterminada" icon="pi pi-check-circle" 
+                  pTooltip="Marcar como predeterminada" tooltipPosition="top"
+                  class="p-button-rounded p-button-success p-mr-2" 
+                  (click)="marcarComoPredeterminada(dir)"></button>
+          <button pButton pRipple icon="pi pi-pencil" 
+                  pTooltip="Editar dirección" tooltipPosition="top"
+                  class="p-button-rounded p-button-warning p-mr-2" 
+                  (click)="editarDireccion(dir.id)"></button>
+          <button pButton pRipple icon="pi pi-trash" 
+                  pTooltip="Eliminar dirección" tooltipPosition="top"
+                  class="p-button-rounded p-button-danger" 
+                  (click)="eliminarDireccion(dir.id)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="p-text-center">
+          No tiene direcciones guardadas. ¡Agregue una!
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="6" class="p-text-center">Cargando direcciones... Por favor espere.</td>
+        </tr>
+    </ng-template>
+  </p-table>
 </div>
