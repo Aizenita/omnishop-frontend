@@ -6,6 +6,8 @@ import { ProductDetailComponent } from './features/product-detail/product-detail
 import { CartComponent } from './features/cart/cart.component'; // Importar CartComponent
 import { ProfileComponent } from './features/profile/profile.component';
 import { authGuard } from './shared/guards/auth.guard';
+import { DireccionListComponent } from './features/profile/components/direccion-list/direccion-list.component';
+import { DireccionFormComponent } from './features/profile/components/direccion-form/direccion-form.component';
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -16,6 +18,13 @@ export const routes: Routes = [
   { 
     path: 'profile', 
     component: ProfileComponent,
-    canActivate: [authGuard] // <--- AÑADIR ESTA LÍNEA
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'direcciones', pathMatch: 'full' }, // Default to addresses list
+      { path: 'direcciones', component: DireccionListComponent },
+      { path: 'direcciones/nueva', component: DireccionFormComponent },
+      { path: 'direcciones/editar/:id', component: DireccionFormComponent }
+      // Potentially other profile sections here like 'pedidos', 'datos-personales'
+    ]
   }  
 ];

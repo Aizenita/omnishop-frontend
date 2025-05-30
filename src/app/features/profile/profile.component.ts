@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service'; 
 import { UserIdentity } from '../../shared/services/auth.service'; 
 import { Observable } from 'rxjs';
+import { RouterModule } from '@angular/router'; // Added for routerLink/router-outlet
 import { CardModule } from 'primeng/card'; // Importar CardModule
 import { ButtonModule } from 'primeng/button'; // Importar ButtonModule
 
@@ -11,6 +12,7 @@ import { ButtonModule } from 'primeng/button'; // Importar ButtonModule
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule, // Added for routerLink/router-outlet
     CardModule,    // Añadir CardModule
     ButtonModule   // Añadir ButtonModule
   ],

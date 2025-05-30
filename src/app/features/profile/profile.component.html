@@ -1,6 +1,6 @@
 <div class="profile-container p-m-2 p-lg-4">
   <ng-container *ngIf="currentUser$ | async as user; else notLoggedIn">
-    <p-card header="Mi Perfil">
+    <p-card header="Mi Perfil" styleClass="mb-3">
       <p><strong>Nombre:</strong> {{ user.nombre }}</p>
       <p><strong>Email:</strong> {{ user.email }}</p>
       <p><strong>Rol:</strong> {{ user.rol }}</p>
@@ -10,10 +10,24 @@
         <button pButton label="Editar Perfil" icon="pi pi-user-edit" styleClass="p-button-secondary" (click)="editProfile()"></button>
       </ng-template>
     </p-card>
+
+    <!-- Navigation to Profile Sections -->
+    <div class="profile-navigation mb-3">
+      <!--
+        Using routerLink to navigate.
+        The path './direcciones' is relative to the current '/profile' route.
+        So it will navigate to '/profile/direcciones'.
+      -->
+      <a routerLink="./direcciones" pButton label="Mis Direcciones de Envío" icon="pi pi-map-marker" styleClass="p-button-info"></a>
+      <!-- Add other links here for other profile sections like 'Mis Pedidos' -->
+    </div>
+
+    <!-- Router Outlet for child components (DireccionListComponent, DireccionFormComponent) -->
+    <router-outlet></router-outlet>
+
   </ng-container>
 
   <ng-template #notLoggedIn>
     <p>Por favor, inicia sesión para ver tu perfil.</p>
   </ng-template>
-  <!-- Necesitaremos importar CardModule y ButtonModule en el .ts -->
 </div>
