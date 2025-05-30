@@ -1,0 +1,19 @@
+<div class="profile-container p-m-2 p-lg-4">
+  <ng-container *ngIf="currentUser$ | async as user; else notLoggedIn">
+    <p-card header="Mi Perfil">
+      <p><strong>Nombre:</strong> {{ user.nombre }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Rol:</strong> {{ user.rol }}</p>
+      <p><strong>ID de Usuario:</strong> {{ user.id }}</p>
+      
+      <ng-template pTemplate="footer">
+        <button pButton label="Editar Perfil" icon="pi pi-user-edit" styleClass="p-button-secondary" (click)="editProfile()"></button>
+      </ng-template>
+    </p-card>
+  </ng-container>
+
+  <ng-template #notLoggedIn>
+    <p>Por favor, inicia sesión para ver tu perfil.</p>
+  </ng-template>
+  <!-- Necesitaremos importar CardModule y ButtonModule en el .ts -->
+</div>

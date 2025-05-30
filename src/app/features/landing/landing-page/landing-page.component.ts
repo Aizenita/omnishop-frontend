@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable,tap } from 'rxjs';
 import { Product, ProductService } from '../../../shared/services/product.service';
 import { Category } from '../../../shared/models/category.model';
 import { CategoryService } from '../../../shared/services/category.service';
@@ -46,7 +46,9 @@ export class LandingPageComponent implements OnInit {
   ) {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
     this.currentUser$ = this.authService.currentUser$;
-    this.cartItemCount$ = this.cartService.getCartItemCount(); // Asignar observable
+    this.cartItemCount$ = this.cartService.getCartItemCount().pipe(
+      tap(count => console.log('LandingPageComponent: cartItemCount$ emitió:', count))
+    );
   }
 
   ngOnInit(): void {
@@ -57,6 +59,9 @@ export class LandingPageComponent implements OnInit {
     this.categoryService.getCategories().subscribe(data => {
       this.categories = data;
     });
+    this.cartItemCount$ = this.cartService.getCartItemCount().pipe(
+     tap(count => console.log('LandingPageComponent: cartItemCount$ emitió:', count))
+);
   }
    quickAddToCart(product: Product): void {
     if (product && product.id) {
