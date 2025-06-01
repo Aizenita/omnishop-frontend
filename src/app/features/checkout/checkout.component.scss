@@ -1,0 +1,11 @@
+.checkout-container {
+  max-width: 960px; // Example max-width
+  margin: 20px auto;
+
+  .checkout-steps-content {
+    margin-top: 1.5rem;
+  }
+}
+
+// Styles for stepper/tabs if used can go here
+// e.g. :host ::ng-deep .p-stepper-nav { ... }

@@ -8,6 +8,9 @@ import { ProfileComponent } from './features/profile/profile.component';
 import { authGuard } from './shared/guards/auth.guard';
 import { DireccionListComponent } from './features/profile/components/direccion-list/direccion-list.component';
 import { DireccionFormComponent } from './features/profile/components/direccion-form/direccion-form.component';
+import { CheckoutComponent } from './features/checkout/checkout.component';
+import { CheckoutSuccessComponent } from './features/checkout/components/checkout-success/checkout-success.component'; // Added
+import { CheckoutFailureComponent } from './features/checkout/components/checkout-failure/checkout-failure.component'; // Added
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -26,5 +29,21 @@ export const routes: Routes = [
       { path: 'direcciones/editar/:id', component: DireccionFormComponent }
       // Potentially other profile sections here like 'pedidos', 'datos-personales'
     ]
-  }  
+  },
+  { // New Checkout Route
+    path: 'checkout',
+    component: CheckoutComponent,
+    canActivate: [authGuard]
+  },
+  { // New Checkout Success Route
+    path: 'pago-ok', // Matches backend redirect
+    component: CheckoutSuccessComponent,
+    canActivate: [authGuard]
+  },
+  { // New Checkout Failure Route
+    path: 'pago-ko', // Matches backend redirect
+    component: CheckoutFailureComponent,
+    canActivate: [authGuard]
+  }
 ];
+

@@ -1,0 +1,47 @@
+<div class="checkout-container p-p-4">
+  <p-card header="Proceso de Compra">
+    <p-messages [(value)]="msgs" [enableService]="false" [closable]="true"></p-messages> <!-- Added -->
+
+    <div class="checkout-steps-content p-mt-3">
+      <!-- Step 1: Order Review -->
+      <div *ngIf="currentStep === 'review' || currentStep === 'address' || currentStep === 'summary'">
+        <app-order-review></app-order-review>
+        <div class="p-d-flex p-jc-end p-mt-3" *ngIf="currentStep === 'review'">
+            <button pButton pRipple label="Siguiente: Dirección de Envío" icon="pi pi-arrow-right" iconPos="right"
+                    (click)="currentStep = 'address'"></button>
+        </div>
+      </div>
+
+      <!-- Step 2: Shipping Address Selection -->
+      <div *ngIf="currentStep === 'address'">
+        <app-shipping-address-selector
+          (addressSelected)="onAddressSelected($event)"
+          class="p-mt-4">
+        </app-shipping-address-selector>
+          <div class="p-d-flex p-jc-between p-mt-3">
+            <button pButton pRipple label="Anterior: Revisar Pedido" icon="pi pi-arrow-left"
+                    (click)="currentStep = 'review'" class="p-button-secondary"></button>
+            <!-- Next button is implicit via address selection for now (auto-moves to summary) -->
+        </div>
+      </div>
+
+      <!-- Step 3: Final Order Summary & Proceed to Payment -->
+      <div *ngIf="currentStep === 'summary' && selectedShippingAddress">
+        <app-order-summary [shippingAddress]="selectedShippingAddress" class="p-mt-4"></app-order-summary>
+        <div class="p-d-flex p-jc-between p-mt-4">
+            <button pButton pRipple label="Editar Dirección" icon="pi pi-pencil"
+                    (click)="editAddress()" class="p-button-secondary"></button>
+            <button pButton pRipple label="Proceder al Pago (Redsys)" icon="pi pi-credit-card"
+                    (click)="proceedToPayment()" [loading]="isLoadingPayment"></button> <!-- Added loading state -->
+        </div>
+      </div>
+
+      <!-- Step 4: Payment Processing Indicator -->
+      <div *ngIf="currentStep === 'payment_processing'" class="p-text-center p-mt-4">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem"></i>
+        <h4>Procesando para redirigir a Redsys...</h4>
+        <p>Por favor, espere.</p>
+      </div>
+    </div>
+  </p-card>
+</div>

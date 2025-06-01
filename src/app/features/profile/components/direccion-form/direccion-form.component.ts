@@ -15,6 +15,7 @@ import { RippleModule } from 'primeng/ripple'; // Often used with buttons
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessagesModule } from 'primeng/messages'; // For global messages
+
 // p-message for individual field errors does not require a separate module import if MessageModule is already there for p-messages
 // However, if only p-message (small ones) are used, then only MessageModule is needed.
 // Let's ensure MessagesModule for p-messages (plural) for global errors.
@@ -41,7 +42,9 @@ export class DireccionFormComponent implements OnInit {
   direccionId: number | null = null;
   isLoading = false;
   // error: string | null = null; // Replaced by msgs
+
   msgs: any[] = [];
+
   pageTitle = 'Nueva Dirección';
 
   constructor(
@@ -80,14 +83,18 @@ export class DireccionFormComponent implements OnInit {
               // if we want to load a single address for editing.
               // For now, it attempts to find it in the full list if getDirecciones() was used.
               // This logic to fetch for edit mode still needs a proper getDireccion(id) in service
+
               if (this.direccionService.getDirecciones) { 
                  return this.direccionService.getDirecciones(); 
+
               } else {
                  this.msgs = [{severity:'warn', summary:'Advertencia', detail:'Servicio para cargar dirección individual no implementado.'}];
                  return of(null);
               }
             }
+
             return of(null); 
+
           })
         ).subscribe(data => {
           if (this.isEditMode && Array.isArray(data) && this.direccionId) {
@@ -97,6 +104,7 @@ export class DireccionFormComponent implements OnInit {
             } else {
               this.msgs = [{severity:'error', summary:'Error', detail:'Dirección no encontrada para editar.'}];
             }
+
           } 
           this.isLoading = false;
         }, err => {

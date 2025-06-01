@@ -1,0 +1,25 @@
+.shipping-address-selector {
+  // General container styling
+}
+
+.addresses-list {
+  .p-card {
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+    border: 2px solid transparent; // For selection indication
+
+    &:hover {
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1);
+    }
+
+    &.selected-address {
+      border-color: var(--primary-color); // Uses PrimeNG theme color
+      box-shadow: 0 0 0 0.2rem var(--primary-color-lighter, rgba(var(--primary-color-rgb), 0.2)); // Focus ring like effect
+    }
+
+    .p-card-title { // Target the title block for flex layout
+       width: 100%; // Ensure title block takes full width for flex
+    }
+  }
+}
+// PrimeFlex classes p-d-flex, p-jc-between, p-ai-center, p-mb-3, p-mt-3, p-mt-2, p-text-center used.
