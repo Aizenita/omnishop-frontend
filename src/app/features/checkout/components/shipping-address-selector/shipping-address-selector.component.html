@@ -1,0 +1,40 @@
+<div class="shipping-address-selector p-mt-4">
+  <h3 class="p-mb-3">Selecciona tu Dirección de Envío</h3>
+
+  <div *ngIf="isLoading" class="p-text-center">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+    <p>Cargando direcciones...</p>
+  </div>
+
+  <ng-container *ngIf="!(isLoading) && (addresses$ | async) as addresses">
+    <div *ngIf="addresses.length > 0; else noAddresses" class="addresses-list">
+      <div *ngFor="let address of addresses" class="p-mb-3">
+        <p-card [ngClass]="{'selected-address': selectedAddress?.id === address.id}">
+          <ng-template pTemplate="title">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <span>{{ address.calle }}</span>
+              <p-radioButton name="shippingAddress" [value]="address" [(ngModel)]="selectedAddress"
+                             (onClick)="selectAddress(address)" [inputId]="'addrOpt-' + address.id"></p-radioButton>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="subtitle">
+            {{ address.ciudad }}, {{ address.cp }}, {{ address.pais }}
+          </ng-template>
+          <p-tag *ngIf="address.predeterminada" severity="info" value="Predeterminada"></p-tag>
+          <!-- <button pButton type="button" label="Seleccionar esta dirección"
+                  *ngIf="selectedAddress?.id !== address.id"
+                  (click)="selectAddress(address)"
+                  class="p-button-sm p-mt-2"></button> -->
+        </p-card>
+      </div>
+    </div>
+    <ng-template #noAddresses>
+      <div class="p-text-center p-p-3">
+        <p>No tienes direcciones guardadas.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus"
+          class="p-button-outlined p-mt-3" (click)="addNewAddress()"></button>
+</div>

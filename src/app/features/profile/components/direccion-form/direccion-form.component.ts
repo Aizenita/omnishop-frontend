@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common'; // Added
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'; // Added ReactiveFormsModule
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DireccionEnvioService } from '../../../../shared/services/direccion-envio.service';
 import { DireccionEnvio } from '../../../../shared/models/direccion-envio.model';
 import { DireccionEnvioRequest } from '../../../../shared/models/direccion-envio-request.model';
@@ -8,8 +9,30 @@ import { DireccionEnvioUpdate } from '../../../../shared/models/direccion-envio-
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+// PrimeNG Modules
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple'; // Often used with buttons
+import { InputTextModule } from 'primeng/inputtext';
+import { CheckboxModule } from 'primeng/checkbox';
+import { MessagesModule } from 'primeng/messages'; // For global messages
+import { Message } from 'primeng/api'; // For Message type
+// p-message for individual field errors does not require a separate module import if MessageModule is already there for p-messages
+// However, if only p-message (small ones) are used, then only MessageModule is needed.
+// Let's ensure MessagesModule for p-messages (plural) for global errors.
+
 @Component({
   selector: 'app-direccion-form',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    RippleModule,
+    InputTextModule,
+    CheckboxModule,
+    MessagesModule // For p-messages (plural)
+  ],
   templateUrl: './direccion-form.component.html',
   styleUrls: ['./direccion-form.component.scss']
 })
@@ -18,7 +41,8 @@ export class DireccionFormComponent implements OnInit {
   isEditMode = false;
   direccionId: number | null = null;
   isLoading = false;
-  error: string | null = null;
+  // error: string | null = null; // Replaced by msgs
+  msgs: Message[] = [];
   pageTitle = 'Nueva Dirección';
 
   constructor(
@@ -30,9 +54,9 @@ export class DireccionFormComponent implements OnInit {
     this.direccionForm = this.fb.group({
       calle: ['', Validators.required],
       ciudad: ['', Validators.required],
-      cp: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]], // Basic 5-digit ZIP
+      cp: ['', [Validators.required, Validators.pattern('^[0-9]{5}$')]],
       pais: ['', Validators.required],
-      predeterminada: [false]
+      predeterminada: [false] // p-checkbox binds to boolean
     });
   }
 
@@ -53,95 +77,63 @@ export class DireccionFormComponent implements OnInit {
           // the component might expect the full DireccionEnvio object via route state or an @Input
           // For simplicity here, let's assume we might fetch or receive it.
           // If DireccionEnvioService does not have getDireccion(id), this needs adjustment.
-          // For now, let's try to get it from the list of addresses (if available) or mock it.
-          // A proper implementation would fetch the single address.
-          // The provided service has getDirecciones(), not getDireccion(id).
-          // So, for edit, we'd need to pass data or enhance service.
-          // For now, I'll prepare the form and load data if DireccionEnvioService had getDireccion(id).
-          // Since it doesn't, I'll log a warning.
-          if (this.direccionService.getDirecciones) { // Check if method exists
-             return this.direccionService.getDirecciones(); // This is not ideal, should be getDireccion(id)
-          } else {
-             console.warn('DireccionService.getDireccion(id) not implemented. Form may not load existing data for edit.');
-             return of(null); // Return an observable of null
+              // Current service doesn't have getDireccion(id). This part needs review
+              // if we want to load a single address for editing.
+              // For now, it attempts to find it in the full list if getDirecciones() was used.
+              // This logic to fetch for edit mode still needs a proper getDireccion(id) in service
+              if (this.direccionService.getDirecciones) {
+                 return this.direccionService.getDirecciones();
+              } else {
+                 this.msgs = [{severity:'warn', summary:'Advertencia', detail:'Servicio para cargar dirección individual no implementado.'}];
+                 return of(null);
+              }
+            }
+            return of(null);
+          })
+        ).subscribe(data => {
+          if (this.isEditMode && Array.isArray(data) && this.direccionId) {
+            const addressToEdit = data.find(d => d.id === this.direccionId);
+            if (addressToEdit) {
+              this.direccionForm.patchValue(addressToEdit);
+            } else {
+              this.msgs = [{severity:'error', summary:'Error', detail:'Dirección no encontrada para editar.'}];
+            }
           }
-        }
-        return of(null); // Not in edit mode
-      })
-    ).subscribe(data => {
-      // If data is DireccionEnvio[] from getDirecciones (the non-ideal case)
-      if (this.isEditMode && Array.isArray(data) && this.direccionId) {
-        const addressToEdit = data.find(d => d.id === this.direccionId);
-        if (addressToEdit) {
-          this.direccionForm.patchValue(addressToEdit);
-        } else {
-          this.error = 'Dirección no encontrada para editar.';
-          console.error('Address not found for ID:', this.direccionId);
-        }
-      }
-      // If data is DireccionEnvio (ideal case from a getDireccion(id) method)
-      // else if (this.isEditMode && data) {
-      //   this.direccionForm.patchValue(data);
-      // }
-      this.isLoading = false;
-    }, err => {
-      this.error = 'Error al cargar los datos de la dirección.';
-      this.isLoading = false;
-      console.error('Error loading address data:', err);
-    });
+          this.isLoading = false;
+        }, err => {
+          this.msgs = [{severity:'error', summary:'Error', detail:'Error al cargar los datos de la dirección.'}];
+          this.isLoading = false;
+        });
   }
 
-  get calle() { return this.direccionForm.get('calle'); }
-  get ciudad() { return this.direccionForm.get('ciudad'); }
-  get cp() { return this.direccionForm.get('cp'); }
-  get pais() { return this.direccionForm.get('pais'); }
+  get f() { return this.direccionForm.controls; } // Helper for easier access in template
 
   guardarDireccion(): void {
+    this.msgs = [];
     if (this.direccionForm.invalid) {
       this.direccionForm.markAllAsTouched();
+      this.msgs = [{severity:'error', summary:'Error de Validación', detail:'Por favor, corrija los errores en el formulario.'}];
       return;
     }
 
     this.isLoading = true;
-    this.error = null;
-
     const formValue = this.direccionForm.value;
 
     if (this.isEditMode && this.direccionId) {
-      const updateData: DireccionEnvioUpdate = {
-        calle: formValue.calle,
-        ciudad: formValue.ciudad,
-        cp: formValue.cp,
-        pais: formValue.pais,
-        predeterminada: formValue.predeterminada
-      };
+      const updateData: DireccionEnvioUpdate = { ...formValue };
       this.direccionService.actualizarDireccion(this.direccionId, updateData).subscribe({
-        next: () => this.router.navigate(['../'], { relativeTo: this.route }), // UPDATED
+        next: () => this.router.navigate(['../'], { relativeTo: this.route }), // Add success message via NavigationExtras state if needed
         error: (err) => {
-          this.error = 'Error al actualizar la dirección.';
-          console.error('Error updating address:', err);
+          this.msgs = [{severity:'error', summary:'Error', detail:'Error al actualizar la dirección.'}];
           this.isLoading = false;
         }
       });
     } else {
-      // For 'crear', DireccionEnvioRequest might need usuarioId.
-      // The backend DTO DireccionEnvioRequestDto has usuarioId.
-      // However, this should ideally be handled by the backend using the authenticated user.
-      // If the backend *requires* it from frontend, it's a potential security concern.
-      // For now, assuming backend can derive it or it's optional from frontend.
-      const requestData: DireccionEnvioRequest = {
-        calle: formValue.calle,
-        ciudad: formValue.ciudad,
-        cp: formValue.cp,
-        pais: formValue.pais,
-        predeterminada: formValue.predeterminada
-        // usuarioId: ... // If needed, get from auth service
-      };
+      const requestData: DireccionEnvioRequest = { ...formValue };
       this.direccionService.crearDireccion(requestData).subscribe({
-        next: () => this.router.navigate(['../'], { relativeTo: this.route }), // UPDATED
+        next: () => this.router.navigate(['../'], { relativeTo: this.route }), // Add success message via NavigationExtras state if needed
         error: (err) => {
-          this.error = 'Error al crear la dirección.';
-          console.error('Error creating address:', err);
+          this.msgs = [{severity:'error', summary:'Error', detail:'Error al crear la dirección.'}];
           this.isLoading = false;
         }
       });
@@ -149,6 +141,6 @@ export class DireccionFormComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['../'], { relativeTo: this.route }); // UPDATED
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }

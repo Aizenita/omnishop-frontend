@@ -1,0 +1,15 @@
+<div class="checkout-result-container p-d-flex p-jc-center p-ai-center">
+  <p-card header="Pago Fallido" styleClass="p-text-center">
+    <div class="p-mb-3">
+      <i class="pi pi-times-circle" style="font-size: 3rem; color: var(--red-500)"></i>
+    </div>
+    <p>Hubo un problema al procesar tu pago.</p>
+    <p *ngIf="errorCode">Código de Error: <strong>{{ errorCode }}</strong></p>
+    <p>Por favor, inténtalo de nuevo o contacta con nosotros si el problema persiste.</p>
+
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Reintentar Pago" routerLink="/checkout" class="p-button-warning p-mr-2"></button>
+      <button pButton pRipple label="Volver al Carrito" routerLink="/cart" class="p-button-secondary"></button>
+    </ng-template>
+  </p-card>
+</div>

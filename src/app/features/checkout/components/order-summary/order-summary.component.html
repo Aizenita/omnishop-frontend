@@ -1,0 +1,46 @@
+<div class="order-summary-container">
+  <h3 class="p-mb-3">Resumen de tu Pedido</h3>
+
+  <div *ngIf="shippingAddress" class="p-mb-3">
+    <h4>Enviar a:</h4>
+    <p>
+      {{ shippingAddress.calle }}<br>
+      {{ shippingAddress.ciudad }}, {{ shippingAddress.cp }}<br>
+      {{ shippingAddress.pais }}
+    </p>
+  </div>
+  <p-divider *ngIf="shippingAddress"></p-divider>
+
+  <h4>Artículos del Pedido:</h4>
+  <ul *ngIf="(cartItems$ | async) as items" class="p-list-none p-p-0 p-mb-3">
+    <li *ngFor="let item of items" class="p-d-flex p-jc-between p-mb-1">
+      <span>{{ item.nombre }} (x{{ item.cantidad }})</span>
+      <span>{{ (item.precio * item.cantidad) | currency:'EUR':'symbol' }}</span>
+    </li>
+  </ul>
+  <p-divider></p-divider>
+
+  <div class="totals p-mb-3">
+    <div class="p-d-flex p-jc-between p-mb-1">
+      <span>Subtotal:</span>
+      <span>{{ (cartSubtotal$ | async) | currency:'EUR':'symbol' }}</span>
+    </div>
+    <div class="p-d-flex p-jc-between p-mb-1">
+      <span>Costos de Envío:</span>
+      <span>{{ shippingCost | currency:'EUR':'symbol' }}</span>
+    </div>
+    <div class="p-d-flex p-jc-between p-mb-1">
+      <span>Impuestos ({{ taxRate * 100 }}%):</span>
+      <span>{{ (taxes$ | async) | currency:'EUR':'symbol' }}</span>
+    </div>
+    <p-divider></p-divider>
+    <div class="p-d-flex p-jc-between p-mt-1 p-text-bold" style="font-size: 1.2em;">
+      <span>Total del Pedido:</span>
+      <span>{{ (totalOrderAmount$ | async) | currency:'EUR':'symbol' }}</span>
+    </div>
+  </div>
+
+  <!-- The button to proceed to payment will be handled by CheckoutComponent,
+       as it needs to coordinate with the backend for Redsys.
+       This component is purely for display. -->
+</div>

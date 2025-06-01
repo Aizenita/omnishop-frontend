@@ -1,57 +1,63 @@
-<div class="direccion-form-container">
-  <h2>{{ pageTitle }}</h2>
+<div class="direccion-form-container p-card p-p-4"> <!-- Added p-card for container -->
+  <h2 class="p-mb-3">{{ pageTitle }}</h2>
 
-  <div *ngIf="isLoading" class="loading-indicator">Cargando...</div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <p-messages [(value)]="msgs" [enableService]="false" [closable]="true"></p-messages>
+
+  <div *ngIf="isLoading" class="p-text-center p-p-3">
+      <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+      <p>Cargando...</p>
+  </div>
 
   <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()" *ngIf="!isLoading">
-    <div class="mb-3">
-      <label for="calle" class="form-label">Calle:</label>
-      <input type="text" id="calle" class="form-control" formControlName="calle"
-             [ngClass]="{ 'is-invalid': calle?.invalid && (calle?.dirty || calle?.touched) }">
-      <div *ngIf="calle?.invalid && (calle?.dirty || calle?.touched)" class="invalid-feedback">
-        <div *ngIf="calle?.errors?.['required']">La calle es obligatoria.</div>
+    <div class="p-fluid p-formgrid p-grid">
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="calle">Calle</label>
+        <input type="text" pInputText id="calle" formControlName="calle"
+               [ngClass]="{'ng-invalid ng-dirty': f['calle'].invalid && (f['calle'].dirty || f['calle'].touched)}" />
+        <small *ngIf="f['calle'].invalid && (f['calle'].dirty || f['calle'].touched)" class="p-error">
+          <span *ngIf="f['calle'].errors?.['required']">La calle es obligatoria.</span>
+        </small>
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="ciudad">Ciudad</label>
+        <input type="text" pInputText id="ciudad" formControlName="ciudad"
+               [ngClass]="{'ng-invalid ng-dirty': f['ciudad'].invalid && (f['ciudad'].dirty || f['ciudad'].touched)}" />
+        <small *ngIf="f['ciudad'].invalid && (f['ciudad'].dirty || f['ciudad'].touched)" class="p-error">
+          <span *ngIf="f['ciudad'].errors?.['required']">La ciudad es obligatoria.</span>
+        </small>
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="cp">Código Postal</label>
+        <input type="text" pInputText id="cp" formControlName="cp"
+               [ngClass]="{'ng-invalid ng-dirty': f['cp'].invalid && (f['cp'].dirty || f['cp'].touched)}" />
+        <small *ngIf="f['cp'].invalid && (f['cp'].dirty || f['cp'].touched)" class="p-error">
+          <span *ngIf="f['cp'].errors?.['required']">El código postal es obligatorio.</span>
+          <span *ngIf="f['cp'].errors?.['pattern']">El código postal debe ser de 5 dígitos.</span>
+        </small>
+      </div>
+
+      <div class="p-field p-col-12 p-md-6">
+        <label for="pais">País</label>
+        <input type="text" pInputText id="pais" formControlName="pais"
+               [ngClass]="{'ng-invalid ng-dirty': f['pais'].invalid && (f['pais'].dirty || f['pais'].touched)}" />
+        <small *ngIf="f['pais'].invalid && (f['pais'].dirty || f['pais'].touched)" class="p-error">
+          <span *ngIf="f['pais'].errors?.['required']">El país es obligatorio.</span>
+        </small>
+      </div>
+
+      <div class="p-field-checkbox p-col-12">
+        <p-checkbox formControlName="predeterminada" [binary]="true" label="Marcar como dirección predeterminada" inputId="predeterminada"></p-checkbox>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label for="ciudad" class="form-label">Ciudad:</label>
-      <input type="text" id="ciudad" class="form-control" formControlName="ciudad"
-             [ngClass]="{ 'is-invalid': ciudad?.invalid && (ciudad?.dirty || ciudad?.touched) }">
-      <div *ngIf="ciudad?.invalid && (ciudad?.dirty || ciudad?.touched)" class="invalid-feedback">
-        <div *ngIf="ciudad?.errors?.['required']">La ciudad es obligatoria.</div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="cp" class="form-label">Código Postal:</label>
-      <input type="text" id="cp" class="form-control" formControlName="cp"
-             [ngClass]="{ 'is-invalid': cp?.invalid && (cp?.dirty || cp?.touched) }">
-      <div *ngIf="cp?.invalid && (cp?.dirty || cp?.touched)" class="invalid-feedback">
-        <div *ngIf="cp?.errors?.['required']">El código postal es obligatorio.</div>
-        <div *ngIf="cp?.errors?.['pattern']">El código postal debe ser de 5 dígitos.</div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label for="pais" class="form-label">País:</label>
-      <input type="text" id="pais" class="form-control" formControlName="pais"
-             [ngClass]="{ 'is-invalid': pais?.invalid && (pais?.dirty || pais?.touched) }">
-      <div *ngIf="pais?.invalid && (pais?.dirty || pais?.touched)" class="invalid-feedback">
-        <div *ngIf="pais?.errors?.['required']">El país es obligatorio.</div>
-      </div>
-    </div>
-
-    <div class="mb-3 form-check">
-      <input type="checkbox" id="predeterminada" class="form-check-input" formControlName="predeterminada">
-      <label class="form-check-label" for="predeterminada">Marcar como dirección predeterminada</label>
-    </div>
-
-    <div class="d-flex justify-content-end">
-      <button type="button" (click)="cancelar()" class="btn btn-secondary me-2">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="direccionForm.invalid || isLoading">
-        {{ isEditMode ? 'Actualizar Dirección' : 'Guardar Dirección' }}
-      </button>
+    <div class="p-d-flex p-jc-end p-mt-4">
+      <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times"
+              class="p-button-secondary p-mr-2" (click)="cancelar()"></button>
+      <button pButton pRipple type="submit" [label]="isEditMode ? 'Actualizar Dirección' : 'Guardar Dirección'"
+              icon="pi pi-check" class="p-button-primary" [disabled]="direccionForm.invalid || isLoading"></button>
     </div>
   </form>
 </div>
