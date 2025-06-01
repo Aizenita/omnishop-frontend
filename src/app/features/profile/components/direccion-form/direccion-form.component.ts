@@ -15,7 +15,7 @@ import { RippleModule } from 'primeng/ripple'; // Often used with buttons
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessagesModule } from 'primeng/messages'; // For global messages
-import { Message } from 'primeng/api'; // For Message type
+
 // p-message for individual field errors does not require a separate module import if MessageModule is already there for p-messages
 // However, if only p-message (small ones) are used, then only MessageModule is needed.
 // Let's ensure MessagesModule for p-messages (plural) for global errors.
@@ -42,7 +42,9 @@ export class DireccionFormComponent implements OnInit {
   direccionId: number | null = null;
   isLoading = false;
   // error: string | null = null; // Replaced by msgs
-  msgs: Message[] = [];
+
+  msgs: any[] = [];
+
   pageTitle = 'Nueva Dirección';
 
   constructor(
@@ -72,7 +74,7 @@ export class DireccionFormComponent implements OnInit {
           // Ideally, fetch the specific address if not passed in
           // For now, we rely on the getDirecciones from list or a dedicated getDireccion(id) if implemented
           // This example assumes we might need to fetch it:
-          // return this.direccionService.getDireccion(this.direccionId);
+          // return this.direccionService.getDireccion(this.direccionId); 
           // If getDireccion(id) is not available or not preferred,
           // the component might expect the full DireccionEnvio object via route state or an @Input
           // For simplicity here, let's assume we might fetch or receive it.
@@ -81,14 +83,18 @@ export class DireccionFormComponent implements OnInit {
               // if we want to load a single address for editing.
               // For now, it attempts to find it in the full list if getDirecciones() was used.
               // This logic to fetch for edit mode still needs a proper getDireccion(id) in service
-              if (this.direccionService.getDirecciones) {
-                 return this.direccionService.getDirecciones();
+
+              if (this.direccionService.getDirecciones) { 
+                 return this.direccionService.getDirecciones(); 
+
               } else {
                  this.msgs = [{severity:'warn', summary:'Advertencia', detail:'Servicio para cargar dirección individual no implementado.'}];
                  return of(null);
               }
             }
-            return of(null);
+
+            return of(null); 
+
           })
         ).subscribe(data => {
           if (this.isEditMode && Array.isArray(data) && this.direccionId) {
@@ -98,7 +104,8 @@ export class DireccionFormComponent implements OnInit {
             } else {
               this.msgs = [{severity:'error', summary:'Error', detail:'Dirección no encontrada para editar.'}];
             }
-          }
+
+          } 
           this.isLoading = false;
         }, err => {
           this.msgs = [{severity:'error', summary:'Error', detail:'Error al cargar los datos de la dirección.'}];

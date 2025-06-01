@@ -8,6 +8,7 @@
   </div>
 
   <p-table [value]="direcciones" [responsive]="true" [loading]="isLoading"
+
            dataKey="id" styleClass="p-datatable-striped p-datatable-gridlines">
     <ng-template pTemplate="header">
       <tr>
@@ -41,6 +42,7 @@
           <button pButton pRipple icon="pi pi-trash"
                   pTooltip="Eliminar dirección" tooltipPosition="top"
                   class="p-button-rounded p-button-danger"
+
                   (click)="eliminarDireccion(dir.id)"></button>
         </td>
       </tr>
@@ -59,3 +61,4 @@
     </ng-template>
   </p-table>
 </div>
+

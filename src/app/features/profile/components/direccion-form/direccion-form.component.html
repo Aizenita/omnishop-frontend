@@ -11,9 +11,10 @@
   <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()" *ngIf="!isLoading">
     <div class="p-fluid p-formgrid p-grid">
 
+      
       <div class="p-field p-col-12 p-md-6">
         <label for="calle">Calle</label>
-        <input type="text" pInputText id="calle" formControlName="calle"
+        <input type="text" pInputText id="calle" formControlName="calle" 
                [ngClass]="{'ng-invalid ng-dirty': f['calle'].invalid && (f['calle'].dirty || f['calle'].touched)}" />
         <small *ngIf="f['calle'].invalid && (f['calle'].dirty || f['calle'].touched)" class="p-error">
           <span *ngIf="f['calle'].errors?.['required']">La calle es obligatoria.</span>
@@ -57,6 +58,7 @@
       <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times"
               class="p-button-secondary p-mr-2" (click)="cancelar()"></button>
       <button pButton pRipple type="submit" [label]="isEditMode ? 'Actualizar Dirección' : 'Guardar Dirección'"
+
               icon="pi pi-check" class="p-button-primary" [disabled]="direccionForm.invalid || isLoading"></button>
     </div>
   </form>

@@ -9,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table'; // Added for p-table
 import { MessagesModule } from 'primeng/messages'; // Added for p-messages
-import { Message } from 'primeng/api'; // For Message type
 import { TagModule } from 'primeng/tag'; // Added for p-tag
 import { TooltipModule } from 'primeng/tooltip'; // For button tooltips
 
@@ -33,7 +32,9 @@ export class DireccionListComponent implements OnInit {
   direcciones: DireccionEnvio[] = [];
   isLoading = false;
   // error: string | null = null; // Will use msgs for errors
-  msgs: Message[] = [];
+
+  msgs: any[] = [];
+
 
   constructor(
     private direccionService: DireccionEnvioService,
@@ -74,17 +75,20 @@ export class DireccionListComponent implements OnInit {
     // Future: Replace confirm with p-confirmDialog
     if (confirm('¿Está seguro de que desea eliminar esta dirección?')) {
       this.isLoading = true;
+
       this.msgs = [];
       this.direccionService.eliminarDireccion(id).subscribe({
         next: () => {
           this.msgs = [{severity:'success', summary:'Eliminada', detail:'Dirección eliminada correctamente.'}];
           this.cargarDirecciones();
+
         },
         error: (err) => {
           // this.error = 'Error al eliminar la dirección.';
           this.msgs = [{severity:'error', summary:'Error', detail:'Error al eliminar la dirección.'}];
           console.error('Error deleting address:', err);
-          this.isLoading = false;
+
+          this.isLoading = false; 
         }
       });
     }
@@ -96,11 +100,13 @@ export class DireccionListComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+
     this.msgs = [];
     this.direccionService.actualizarDireccion(direccion.id, { predeterminada: true }).subscribe({
       next: () => {
         this.msgs = [{severity:'success', summary:'Actualizada', detail:'Dirección marcada como predeterminada.'}];
         this.cargarDirecciones();
+
       },
       error: (err) => {
         // this.error = 'Error al marcar como predeterminada.';
