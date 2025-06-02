@@ -9,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table'; // Added for p-table
 import { MessagesModule } from 'primeng/messages'; // Added for p-messages
-import { Message } from 'primeng/api'; // For Message type
 import { TagModule } from 'primeng/tag'; // Added for p-tag
 import { TooltipModule } from 'primeng/tooltip'; // For button tooltips
 
@@ -33,7 +32,7 @@ export class DireccionListComponent implements OnInit {
   direcciones: DireccionEnvio[] = [];
   isLoading = false;
   // error: string | null = null; // Will use msgs for errors
-  msgs: Message[] = [];
+  msgs: any [] = [];
 
   constructor(
     private direccionService: DireccionEnvioService,

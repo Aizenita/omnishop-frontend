@@ -13,7 +13,6 @@ import { PagoItemDto } from '../../shared/models/iniciar-pago-request.dto'; // R
 import { FinalizarPedidoResponseDto } from '../../shared/models/finalizar-pedido-response.dto';
 import { CheckoutService } from './services/checkout.service';
 import { CartService, CartItem } from '../../shared/services/cart.service';
-import { Message } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';

@@ -15,7 +15,6 @@ import { RippleModule } from 'primeng/ripple'; // Often used with buttons
 import { InputTextModule } from 'primeng/inputtext';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessagesModule } from 'primeng/messages'; // For global messages
-import { Message } from 'primeng/api'; // For Message type
 // p-message for individual field errors does not require a separate module import if MessageModule is already there for p-messages
 // However, if only p-message (small ones) are used, then only MessageModule is needed.
 // Let's ensure MessagesModule for p-messages (plural) for global errors.
@@ -42,7 +41,7 @@ export class DireccionFormComponent implements OnInit {
   direccionId: number | null = null;
   isLoading = false;
   // error: string | null = null; // Replaced by msgs
-  msgs: Message[] = [];
+  msgs:any[] = [];
   pageTitle = 'Nueva Dirección';
 
   constructor(

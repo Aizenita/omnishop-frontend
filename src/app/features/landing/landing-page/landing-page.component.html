@@ -50,7 +50,7 @@
     <h2>Featured Products</h2>
     <div *ngIf="products && products.length > 0; else noProducts" class="products-grid">
       <div *ngFor="let product of products" class="product-item">
-        <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
+        <img [src]="'http://localhost:8080/uploads/' + product.imagen" [alt]="product.nombre" class="product-image">
         <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-description">{{ product.descripcion }}</p>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
@@ -73,7 +73,7 @@
     <h2>Special Offers</h2>
     <div *ngIf="specialOfferProducts && specialOfferProducts.length > 0; else noSpecialOffers" class="offers-grid">
       <div *ngFor="let product of specialOfferProducts" class="product-item">
-        <img [src]="product.imagen || 'assets/placeholder-image.png'" [alt]="product.nombre" class="product-image">
+        <img [src]="'http://localhost:8080/uploads/' + product.imagen" [alt]="product.nombre" class="product-image">
         <h3><a [routerLink]="['/product', product.id]">{{ product.nombre }}</a></h3>
         <p class="product-price">{{ product.precio | currency:'USD':'symbol' }}</p>
         <!-- Botón "Add to Cart" original eliminado/comentado si es necesario -->
