@@ -18,6 +18,7 @@ import { MessagesModule } from 'primeng/messages';
 import { Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-checkout',
   standalone: true,
@@ -38,9 +39,8 @@ import { first } from 'rxjs/operators';
 export class CheckoutComponent implements OnInit, OnDestroy {
   selectedShippingAddress: DireccionEnvio | null = null;
   currentStep: string = 'review';
-  msgs: Message[] = []; // For displaying messages to the user
-  isLoadingPayment: boolean = false;
-
+  msgs: any = []; // For displaying messages to the user
+  isLoadingPayment: boolean = false; // To show loading during payment initiation
   private cartItems: CartItem[] = [];
   // private cartTotal: number = 0; // Subtotal from cart
   private subscriptions = new Subscription();
@@ -55,6 +55,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private router: Router // For navigation
     // private renderer: Renderer2 // Removed if only for Redsys form
+
   ) { }
   
   ngOnInit(): void {
@@ -126,7 +127,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Removed redirectToRedsys method
+
 
   editAddress(): void {
     this.selectedShippingAddress = null;

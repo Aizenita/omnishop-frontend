@@ -22,6 +22,8 @@ export class CartService implements OnDestroy { // Implementar OnDestroy
   public items$: Observable<CartItem[]> = this.itemsSubject.asObservable();
   private apiUrl = '/api/carrito';
   private destroy$ = new Subject<void>(); // Para desuscripción
+  private cartSubtotalSubject = new BehaviorSubject<number>(0);
+  public cartSubtotal$ = this.cartSubtotalSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -39,7 +41,14 @@ export class CartService implements OnDestroy { // Implementar OnDestroy
       // Aquí solo nos interesa disparar la carga.
       error: err => console.error('CartService: Error en la suscripción a isAuthenticated$ para cargar carrito', err)
     });
-  }
+     this.items$.subscribe(items => {
+    const subtotal = items.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+    this.cartSubtotalSubject.next(subtotal);
+  });
+}
+  getCurrentSubtotal(): number {
+  return this.cartSubtotalSubject.value;
+}
 
   public loadInitialCart(): Observable<CartItem[]> { // Devolver Observable
     console.log('CartService: loadInitialCart llamado. Autenticado:', this.authService.isAuthenticated());

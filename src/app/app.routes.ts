@@ -54,4 +54,5 @@ export const routes: Routes = [
   //   component: CheckoutFailureComponent, // This component will be deleted
   //   canActivate: [authGuard] 
   // }
+
 ];

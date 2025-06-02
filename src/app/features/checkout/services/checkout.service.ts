@@ -24,7 +24,7 @@ export class CheckoutService {
   /*
   // Comment out or remove Redsys method
   iniciarPagoRedsys(payload: IniciarPagoRequestDto): Observable<RedsysParamsDto> {
-    return this.http.post<RedsysParamsDto>(`${this.apiUrl}/iniciar-pago-redsys`, payload);
+    return this.http.post<RedsysParamsDto>(`${this.apiUrl}/iniciar-pago`, payload);
   }
   */
 }
