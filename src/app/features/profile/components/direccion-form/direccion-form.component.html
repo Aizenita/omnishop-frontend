@@ -10,7 +10,6 @@
 
   <form [formGroup]="direccionForm" (ngSubmit)="guardarDireccion()" *ngIf="!isLoading">
     <div class="p-fluid p-formgrid p-grid">
-
       
       <div class="p-field p-col-12 p-md-6">
         <label for="calle">Calle</label>
@@ -55,10 +54,9 @@
     </div>
 
     <div class="p-d-flex p-jc-end p-mt-4">
-      <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times"
+      <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times" 
               class="p-button-secondary p-mr-2" (click)="cancelar()"></button>
-      <button pButton pRipple type="submit" [label]="isEditMode ? 'Actualizar Dirección' : 'Guardar Dirección'"
-
+      <button pButton pRipple type="submit" [label]="isEditMode ? 'Actualizar Dirección' : 'Guardar Dirección'" 
               icon="pi pi-check" class="p-button-primary" [disabled]="direccionForm.invalid || isLoading"></button>
     </div>
   </form>

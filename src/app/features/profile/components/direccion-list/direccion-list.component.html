@@ -3,12 +3,11 @@
 
   <div class="p-d-flex p-jc-between p-ai-center p-mb-3">
     <h2>Mis Direcciones de Envío</h2>
-    <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus"
+    <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus" 
             class="p-button-success" (click)="agregarNuevaDireccion()"></button>
   </div>
 
-  <p-table [value]="direcciones" [responsive]="true" [loading]="isLoading"
-
+  <p-table [value]="direcciones" [responsive]="true" [loading]="isLoading" 
            dataKey="id" styleClass="p-datatable-striped p-datatable-gridlines">
     <ng-template pTemplate="header">
       <tr>
@@ -31,18 +30,17 @@
           <p-tag *ngIf="!dir.predeterminada" severity="info" value="No"></p-tag>
         </td>
         <td>
-          <button pButton pRipple *ngIf="!dir.predeterminada" icon="pi pi-check-circle"
+          <button pButton pRipple *ngIf="!dir.predeterminada" icon="pi pi-check-circle" 
                   pTooltip="Marcar como predeterminada" tooltipPosition="top"
-                  class="p-button-rounded p-button-success p-mr-2"
+                  class="p-button-rounded p-button-success p-mr-2" 
                   (click)="marcarComoPredeterminada(dir)"></button>
-          <button pButton pRipple icon="pi pi-pencil"
+          <button pButton pRipple icon="pi pi-pencil" 
                   pTooltip="Editar dirección" tooltipPosition="top"
-                  class="p-button-rounded p-button-warning p-mr-2"
+                  class="p-button-rounded p-button-warning p-mr-2" 
                   (click)="editarDireccion(dir.id)"></button>
-          <button pButton pRipple icon="pi pi-trash"
+          <button pButton pRipple icon="pi pi-trash" 
                   pTooltip="Eliminar dirección" tooltipPosition="top"
-                  class="p-button-rounded p-button-danger"
-
+                  class="p-button-rounded p-button-danger" 
                   (click)="eliminarDireccion(dir.id)"></button>
         </td>
       </tr>
@@ -61,4 +59,3 @@
     </ng-template>
   </p-table>
 </div>
-

@@ -66,7 +66,7 @@ describe('DireccionListComponent', () => {
   describe('ngOnInit and cargarDirecciones', () => {
     it('should call cargarDirecciones on init and load addresses successfully', () => {
       mockDireccionEnvioService.getDirecciones.and.returnValue(of(mockDirecciones));
-
+      
       fixture.detectChanges(); // Triggers ngOnInit
 
       expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalled();
@@ -78,7 +78,7 @@ describe('DireccionListComponent', () => {
 
     it('should handle error when loading addresses', () => {
       mockDireccionEnvioService.getDirecciones.and.returnValue(throwError(() => new Error('Test error')));
-
+      
       fixture.detectChanges(); // Triggers ngOnInit
 
       expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalled();
@@ -115,31 +115,31 @@ describe('DireccionListComponent', () => {
 
     it('should call service.eliminarDireccion and reload addresses on success', fakeAsync(() => {
       mockDireccionEnvioService.eliminarDireccion.and.returnValue(of(void 0));
-
+      
       component.eliminarDireccion(1);
-      tick();
+      tick(); 
 
       expect(mockDireccionEnvioService.eliminarDireccion).toHaveBeenCalledWith(1);
       expect(component.msgs.length).toBe(1);
       expect(component.msgs[0].severity).toBe('success');
       expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalledTimes(1); // Called by cargarDirecciones
     }));
-
+    
     it('should display error message on service.eliminarDireccion failure', fakeAsync(() => {
       mockDireccionEnvioService.eliminarDireccion.and.returnValue(throwError(() => new Error('Delete error')));
-
+      
       component.eliminarDireccion(1);
       tick();
 
       expect(mockDireccionEnvioService.eliminarDireccion).toHaveBeenCalledWith(1);
-      expect(component.isLoading).toBeFalse();
+      expect(component.isLoading).toBeFalse(); 
       expect(component.msgs.length).toBe(1);
       expect(component.msgs[0].severity).toBe('error');
       expect(component.msgs[0].detail).toContain('Error al eliminar la dirección');
     }));
 
     it('should not call service.eliminarDireccion if confirm is false', () => {
-      (window.confirm as jasmine.Spy).and.returnValue(false);
+      (window.confirm as jasmine.Spy).and.returnValue(false); 
       component.eliminarDireccion(1);
       expect(mockDireccionEnvioService.eliminarDireccion).not.toHaveBeenCalled();
     });
@@ -148,7 +148,7 @@ describe('DireccionListComponent', () => {
   describe('marcarComoPredeterminada', () => {
     beforeEach(() => {
        mockDireccionEnvioService.getDirecciones.calls.reset();
-       mockDireccionEnvioService.getDirecciones.and.returnValue(of(mockDirecciones));
+       mockDireccionEnvioService.getDirecciones.and.returnValue(of(mockDirecciones)); 
     });
 
     it('should not call service if address is already default', () => {
@@ -169,16 +169,16 @@ describe('DireccionListComponent', () => {
       expect(mockDireccionEnvioService.actualizarDireccion).toHaveBeenCalledWith(nonDefaultAddress.id, { predeterminada: true });
       expect(component.msgs.length).toBe(1);
       expect(component.msgs[0].severity).toBe('success');
-      expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalledTimes(1);
+      expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalledTimes(1); 
     }));
-
+    
     it('should display error message on service.actualizarDireccion failure', fakeAsync(() => {
       const nonDefaultAddress = { ...mockDirecciones[1], predeterminada: false };
       mockDireccionEnvioService.actualizarDireccion.and.returnValue(throwError(() => new Error('Update error')));
 
       component.marcarComoPredeterminada(nonDefaultAddress);
       tick();
-
+      
       expect(mockDireccionEnvioService.actualizarDireccion).toHaveBeenCalledWith(nonDefaultAddress.id, { predeterminada: true });
       expect(component.isLoading).toBeFalse();
       expect(component.msgs.length).toBe(1);

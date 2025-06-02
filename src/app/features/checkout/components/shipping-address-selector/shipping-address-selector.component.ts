@@ -56,7 +56,7 @@ export class ShippingAddressSelectorComponent implements OnInit {
       } else if (addresses.length > 0) {
         // If no default, select the first one by default? Or none?
         // For now, select first if no default.
-        // this.selectAddress(addresses[0]);
+        // this.selectAddress(addresses[0]); 
       }
       this.isLoading = false;
     }, error => {

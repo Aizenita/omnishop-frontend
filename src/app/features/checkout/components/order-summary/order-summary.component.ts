@@ -23,10 +23,10 @@ import { ButtonModule } from 'primeng/button'; // For "Proceed to Payment" butto
 })
 export class OrderSummaryComponent implements OnInit {
   @Input() shippingAddress: DireccionEnvio | null = null;
-
+  
   cartItems$: Observable<CartItem[]> = of([]);
   cartSubtotal$: Observable<number> = of(0);
-
+  
   // Placeholders - these would typically come from configuration or backend calculation
   shippingCost: number = 5.00; // Example fixed shipping
   taxRate: number = 0.10; // Example 10% tax rate

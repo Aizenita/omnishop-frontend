@@ -37,11 +37,11 @@ describe('OrderSummaryComponent', () => {
 
     // Set @Input
     component.shippingAddress = mockShippingAddress;
-
+    
     // Mock cart service observables
     mockCartService.items$.next(mockCartItems);
     (mockCartService.getCartSubtotal() as BehaviorSubject<number>).next(mockSubtotal);
-
+    
     fixture.detectChanges(); // ngOnInit
   });
 

@@ -1,20 +1,22 @@
-import { Component, OnInit, Renderer2, OnDestroy } from '@angular/core'; // Added Renderer2, OnDestroy
+import { Component, OnInit, OnDestroy } from '@angular/core'; // Removed Renderer2 if not used elsewhere
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router'; // Router for navigation
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { OrderReviewComponent } from './components/order-review/order-review.component';
 import { ShippingAddressSelectorComponent } from './components/shipping-address-selector/shipping-address-selector.component';
 import { OrderSummaryComponent } from './components/order-summary/order-summary.component';
 import { DireccionEnvio } from '../../shared/models/direccion-envio.model';
-import { IniciarPagoRequestDto, PagoItemDto } from '../../shared/models/iniciar-pago-request.dto'; // DTOs
-import { RedsysParamsDto } from '../../shared/models/redsys-params.dto';
-import { CheckoutService } from './services/checkout.service'; // Service
-import { CartService, CartItem } from '../../shared/services/cart.service'; // CartService
-import { Message } from 'primeng/api'; // For messages
-import { MessagesModule } from 'primeng/messages'; // For p-messages
-import { Subscription } from 'rxjs'; // For managing subscriptions
-import { first } from 'rxjs/operators'; // To take only the first value of observables
+// Updated DTOs
+import { FinalizarPedidoRequestDto } from '../../shared/models/finalizar-pedido-request.dto';
+import { PagoItemDto } from '../../shared/models/iniciar-pago-request.dto'; // Reused for items
+import { FinalizarPedidoResponseDto } from '../../shared/models/finalizar-pedido-response.dto';
+import { CheckoutService } from './services/checkout.service';
+import { CartService, CartItem } from '../../shared/services/cart.service';
+import { Message } from 'primeng/api';
+import { MessagesModule } from 'primeng/messages';
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout',
@@ -37,27 +39,30 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   selectedShippingAddress: DireccionEnvio | null = null;
   currentStep: string = 'review';
   msgs: Message[] = []; // For displaying messages to the user
-  isLoadingPayment: boolean = false; // To show loading during payment initiation
+  isLoadingPayment: boolean = false;
 
   private cartItems: CartItem[] = [];
-  private cartTotal: number = 0;
+  // private cartTotal: number = 0; // Subtotal from cart
   private subscriptions = new Subscription();
+
+  // Hardcoded shipping and tax, MUST match OrderSummaryComponent for consistency
+  // Ideally, this should come from a shared configuration or service, or OrderSummaryComponent should emit the final total.
+  private readonly shippingCost: number = 5.00;
+  private readonly taxRate: number = 0.10;
 
   constructor(
     private checkoutService: CheckoutService,
     private cartService: CartService,
-    private renderer: Renderer2 // For DOM manipulation (creating form)
+    private router: Router // For navigation
+    // private renderer: Renderer2 // Removed if only for Redsys form
   ) { }
-
+  
   ngOnInit(): void {
     console.log('CheckoutComponent initialized');
-    // Subscribe to cart items and total to have them ready
     this.subscriptions.add(
       this.cartService.items$.subscribe(items => this.cartItems = items)
     );
-    this.subscriptions.add(
-      this.cartService.getCartSubtotal().subscribe(total => this.cartTotal = total)
-    );
+    // No need to store cartTotal here if we recalculate final total in proceedToPayment
   }
 
   ngOnDestroy(): void {
@@ -82,72 +87,46 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
 
     this.isLoadingPayment = true;
-    this.currentStep = 'payment_processing';
+    this.currentStep = 'payment_processing'; // Keep this step name for loading UI
 
-    // For now, let's get the total and items once before making the call
-    this.cartService.items$.pipe(first()).subscribe(currentCartItems => {
-      this.cartService.getCartSubtotal().pipe(first()).subscribe(currentCartTotal => {
-        // Assuming shipping and tax are calculated as in OrderSummaryComponent
-        const shippingCost = 5.00; // Must match OrderSummaryComponent display
-        const taxRate = 0.10;    // Must match OrderSummaryComponent display
-        const taxes = currentCartTotal * taxRate;
-        const finalTotalAmount = currentCartTotal + shippingCost + taxes;
+    // Get current cart items and subtotal to calculate final total for the request
+    this.subscriptions.add(
+        this.cartService.getCartSubtotal().pipe(first()).subscribe(currentCartSubtotal => {
+            const pagoItems: PagoItemDto[] = this.cartItems.map(item => ({
+                productoId: item.productId,
+                cantidad: item.cantidad
+            }));
 
-        const requestPayload: IniciarPagoRequestDto = {
-          shippingAddressId: this.selectedShippingAddress!.id,
-          items: currentCartItems.map(item => ({
-            productoId: item.productId,
-            cantidad: item.cantidad
-          })),
-          totalAmount: parseFloat(finalTotalAmount.toFixed(2)) // Ensure correct format/precision
-        };
+            const taxes = currentCartSubtotal * this.taxRate;
+            const finalTotalAmount = currentCartSubtotal + this.shippingCost + taxes;
 
-        this.subscriptions.add(
-          this.checkoutService.iniciarPagoRedsys(requestPayload).subscribe({
-            next: (redsysParams) => {
-              this.redirectToRedsys(redsysParams);
-              // isLoadingPayment will remain true as page redirects
-            },
-            error: (err) => {
-              console.error('Error al iniciar pago Redsys:', err);
-              this.msgs = [{severity:'error', summary:'Error de Pago', detail: err.message || 'No se pudo iniciar el proceso de pago. Intente de nuevo.'}];
-              this.isLoadingPayment = false;
-              this.currentStep = 'summary'; // Go back to summary to show error
-            }
-          })
-        );
-      });
-    });
+            const requestPayload: FinalizarPedidoRequestDto = {
+                direccionEnvioId: this.selectedShippingAddress!.id,
+                items: pagoItems,
+                total: parseFloat(finalTotalAmount.toFixed(2)) // Ensure correct format/precision
+            };
+
+            this.subscriptions.add(
+                this.checkoutService.finalizarPedidoSimulado(requestPayload).subscribe({
+                    next: (response: FinalizarPedidoResponseDto) => {
+                        this.isLoadingPayment = false;
+                        // Clear cart after successful order simulation
+                        this.cartService.clearCart(); // Or backend should clear cart associated with order
+                        this.router.navigate(['/pedido-confirmado', response.orderId]);
+                    },
+                    error: (err) => {
+                        console.error('Error al finalizar pedido simulado:', err);
+                        this.msgs = [{severity:'error', summary:'Error de Pedido', detail: err.message || 'No se pudo completar el pedido. Intente de nuevo.'}];
+                        this.isLoadingPayment = false;
+                        this.currentStep = 'summary'; // Go back to summary
+                    }
+                })
+            );
+        })
+    );
   }
 
-  private redirectToRedsys(params: RedsysParamsDto): void {
-    const form = this.renderer.createElement('form');
-    this.renderer.setAttribute(form, 'method', 'POST');
-    this.renderer.setAttribute(form, 'action', params.redsysUrl);
-    // this.renderer.setStyle(form, 'display', 'none'); // Hide the form
-
-    const versionInput = this.renderer.createElement('input');
-    this.renderer.setAttribute(versionInput, 'type', 'hidden');
-    this.renderer.setAttribute(versionInput, 'name', 'Ds_SignatureVersion');
-    this.renderer.setAttribute(versionInput, 'value', params.dsSignatureVersion);
-    this.renderer.appendChild(form, versionInput);
-
-    const paramsInput = this.renderer.createElement('input');
-    this.renderer.setAttribute(paramsInput, 'type', 'hidden');
-    this.renderer.setAttribute(paramsInput, 'name', 'Ds_MerchantParameters');
-    this.renderer.setAttribute(paramsInput, 'value', params.dsMerchantParameters);
-    this.renderer.appendChild(form, paramsInput);
-
-    const signatureInput = this.renderer.createElement('input');
-    this.renderer.setAttribute(signatureInput, 'type', 'hidden');
-    this.renderer.setAttribute(signatureInput, 'name', 'Ds_Signature');
-    this.renderer.setAttribute(signatureInput, 'value', params.dsSignature);
-    this.renderer.appendChild(form, signatureInput);
-
-    this.renderer.appendChild(document.body, form);
-    form.submit();
-    this.renderer.removeChild(document.body, form); // Clean up, though submission might happen before this
-  }
+  // Removed redirectToRedsys method
 
   editAddress(): void {
     this.selectedShippingAddress = null;

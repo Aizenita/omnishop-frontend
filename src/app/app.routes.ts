@@ -9,8 +9,11 @@ import { authGuard } from './shared/guards/auth.guard';
 import { DireccionListComponent } from './features/profile/components/direccion-list/direccion-list.component';
 import { DireccionFormComponent } from './features/profile/components/direccion-form/direccion-form.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
-import { CheckoutSuccessComponent } from './features/checkout/components/checkout-success/checkout-success.component'; // Added
-import { CheckoutFailureComponent } from './features/checkout/components/checkout-failure/checkout-failure.component'; // Added
+// Import new confirmation component
+import { OrderConfirmedComponent } from './features/checkout/components/order-confirmed/order-confirmed.component'; 
+// Remove old success/failure component imports if they were here
+// import { CheckoutSuccessComponent } from './features/checkout/components/checkout-success/checkout-success.component'; 
+// import { CheckoutFailureComponent } from './features/checkout/components/checkout-failure/checkout-failure.component'; 
 
 export const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
@@ -35,15 +38,20 @@ export const routes: Routes = [
     component: CheckoutComponent,
     canActivate: [authGuard]
   },
-  { // New Checkout Success Route
-    path: 'pago-ok', // Matches backend redirect
-    component: CheckoutSuccessComponent,
-    canActivate: [authGuard]
-  },
-  { // New Checkout Failure Route
-    path: 'pago-ko', // Matches backend redirect
-    component: CheckoutFailureComponent,
-    canActivate: [authGuard]
+  { // New Order Confirmed Route
+    path: 'pedido-confirmado/:orderId', 
+    component: OrderConfirmedComponent,
+    canActivate: [authGuard] 
   }
+  // Removed /pago-ok and /pago-ko routes
+  // { 
+  //   path: 'pago-ok',
+  //   component: CheckoutSuccessComponent, // This component will be deleted
+  //   canActivate: [authGuard] 
+  // },
+  // { 
+  //   path: 'pago-ko',
+  //   component: CheckoutFailureComponent, // This component will be deleted
+  //   canActivate: [authGuard] 
+  // }
 ];
-

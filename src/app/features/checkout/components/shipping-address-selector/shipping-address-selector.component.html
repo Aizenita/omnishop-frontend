@@ -13,7 +13,7 @@
           <ng-template pTemplate="title">
             <div class="p-d-flex p-jc-between p-ai-center">
               <span>{{ address.calle }}</span>
-              <p-radioButton name="shippingAddress" [value]="address" [(ngModel)]="selectedAddress"
+              <p-radioButton name="shippingAddress" [value]="address" [(ngModel)]="selectedAddress" 
                              (onClick)="selectAddress(address)" [inputId]="'addrOpt-' + address.id"></p-radioButton>
             </div>
           </ng-template>
@@ -21,7 +21,7 @@
             {{ address.ciudad }}, {{ address.cp }}, {{ address.pais }}
           </ng-template>
           <p-tag *ngIf="address.predeterminada" severity="info" value="Predeterminada"></p-tag>
-          <!-- <button pButton type="button" label="Seleccionar esta dirección"
+          <!-- <button pButton type="button" label="Seleccionar esta dirección" 
                   *ngIf="selectedAddress?.id !== address.id"
                   (click)="selectAddress(address)"
                   class="p-button-sm p-mt-2"></button> -->
@@ -35,6 +35,6 @@
     </ng-template>
   </ng-container>
 
-  <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus"
+  <button pButton pRipple type="button" label="Agregar Nueva Dirección" icon="pi pi-plus" 
           class="p-button-outlined p-mt-3" (click)="addNewAddress()"></button>
 </div>

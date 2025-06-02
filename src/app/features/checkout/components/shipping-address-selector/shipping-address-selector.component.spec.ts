@@ -32,8 +32,8 @@ describe('ShippingAddressSelectorComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [
-        ShippingAddressSelectorComponent,
-        RouterTestingModule,
+        ShippingAddressSelectorComponent, 
+        RouterTestingModule, 
         HttpClientTestingModule,
         FormsModule, CardModule, DataViewModule, ButtonModule, TagModule, RadioButtonModule
       ],
@@ -51,7 +51,7 @@ describe('ShippingAddressSelectorComponent', () => {
   it('should create and load addresses on init, auto-selecting default', fakeAsync(() => {
     fixture.detectChanges(); // ngOnInit
     tick(); // for the subscribe block in ngOnInit
-
+    
     expect(component).toBeTruthy();
     expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalled();
     component.addresses$.subscribe(addresses => expect(addresses.length).toBe(2));
@@ -66,7 +66,7 @@ describe('ShippingAddressSelectorComponent', () => {
     expect(component.isLoading).toBeFalse();
     // Check for error message display if implemented, or console.error spy
   }));
-
+  
   it('should select address and emit event on selectAddress', () => {
     spyOn(component.addressSelected, 'emit');
     const addressToSelect = mockAddresses[0];

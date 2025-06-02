@@ -69,15 +69,15 @@ describe('DireccionFormComponent', () => {
 
   it('should create', () => {
     activatedRouteMock.push({}); // Push empty params for initial ngOnInit
-    fixture.detectChanges();
+    fixture.detectChanges(); 
     expect(component).toBeTruthy();
   });
 
   describe('Initialization (ngOnInit)', () => {
     it('should initialize for CREATE mode if no ID in route params', fakeAsync(() => {
       activatedRouteMock.push({}); // No 'id'
-      fixture.detectChanges();
-      tick();
+      fixture.detectChanges(); 
+      tick(); 
 
       expect(component.isEditMode).toBeFalse();
       expect(component.pageTitle).toBe('Nueva Dirección');
@@ -87,8 +87,8 @@ describe('DireccionFormComponent', () => {
     it('should initialize for EDIT mode if ID is present in route params and load data (mocking getDirecciones)', fakeAsync(() => {
       mockDireccionEnvioService.getDirecciones.and.returnValue(of([mockDireccion]));
       activatedRouteMock.push({ id: '1' });
-      fixture.detectChanges();
-      tick();
+      fixture.detectChanges(); 
+      tick(); 
 
       expect(component.isEditMode).toBeTrue();
       expect(component.direccionId).toBe(1);
@@ -96,10 +96,10 @@ describe('DireccionFormComponent', () => {
       expect(mockDireccionEnvioService.getDirecciones).toHaveBeenCalled();
       expect(component.direccionForm.value.calle).toBe(mockDireccion.calle);
     }));
-
+    
     it('should handle error if address not found in EDIT mode (from getDirecciones)', fakeAsync(() => {
-      mockDireccionEnvioService.getDirecciones.and.returnValue(of([ { ...mockDireccion, id: 2 } ]));
-      activatedRouteMock.push({ id: '1' });
+      mockDireccionEnvioService.getDirecciones.and.returnValue(of([ { ...mockDireccion, id: 2 } ])); 
+      activatedRouteMock.push({ id: '1' }); 
       fixture.detectChanges();
       tick();
 
@@ -122,7 +122,7 @@ describe('DireccionFormComponent', () => {
     }));
      it('should show warning if getDirecciones is not available on service in EDIT mode', fakeAsync(() => {
       // Temporarily make getDirecciones undefined on the mock for this specific test
-      (mockDireccionEnvioService as any).getDirecciones = undefined;
+      (mockDireccionEnvioService as any).getDirecciones = undefined; 
       activatedRouteMock.push({ id: '1' });
       fixture.detectChanges();
       tick();
@@ -136,8 +136,8 @@ describe('DireccionFormComponent', () => {
 
   describe('guardarDireccion - CREATE mode', () => {
     beforeEach(fakeAsync(() => {
-      activatedRouteMock.push({});
-      fixture.detectChanges();
+      activatedRouteMock.push({}); 
+      fixture.detectChanges(); 
       tick();
       component.direccionForm.setValue({ calle: 'Test', ciudad: 'Test', cp: '12345', pais: 'Test', predeterminada: false });
     }));
@@ -163,13 +163,13 @@ describe('DireccionFormComponent', () => {
       expect(mockRouter.navigate).not.toHaveBeenCalled();
     }));
   });
-
+  
   describe('guardarDireccion - EDIT mode', () => {
     beforeEach(fakeAsync(() => {
       mockDireccionEnvioService.getDirecciones.and.returnValue(of([mockDireccion]));
       activatedRouteMock.push({ id: '1' });
-      fixture.detectChanges();
-      tick();
+      fixture.detectChanges(); 
+      tick(); 
       component.direccionForm.patchValue({ calle: 'Updated Calle' });
     }));
 
@@ -177,7 +177,7 @@ describe('DireccionFormComponent', () => {
       mockDireccionEnvioService.actualizarDireccion.and.returnValue(of({ ...mockDireccion, calle: 'Updated Calle' }));
       component.guardarDireccion();
       tick();
-
+      
       expect(mockDireccionEnvioService.actualizarDireccion).toHaveBeenCalledWith(1, jasmine.objectContaining({ calle: 'Updated Calle' }));
       expect(mockRouter.navigate).toHaveBeenCalledWith(['../'], { relativeTo: (fixture.debugElement.injector.get(ActivatedRoute) as any) });
     }));
@@ -197,15 +197,15 @@ describe('DireccionFormComponent', () => {
 
   describe('Form Validation', () => {
     beforeEach(fakeAsync(() => {
-      activatedRouteMock.push({});
-      fixture.detectChanges();
+      activatedRouteMock.push({}); 
+      fixture.detectChanges(); 
       tick();
     }));
 
     it('should not submit if form is invalid', () => {
-      component.direccionForm.setValue({ calle: '', ciudad: '', cp: '', pais: '', predeterminada: false });
+      component.direccionForm.setValue({ calle: '', ciudad: '', cp: '', pais: '', predeterminada: false }); 
       component.guardarDireccion();
-
+      
       expect(mockDireccionEnvioService.crearDireccion).not.toHaveBeenCalled();
       expect(mockDireccionEnvioService.actualizarDireccion).not.toHaveBeenCalled();
       expect(component.msgs.length).toBe(1);

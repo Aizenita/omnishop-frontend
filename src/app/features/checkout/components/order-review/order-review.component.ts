@@ -34,7 +34,7 @@ export class OrderReviewComponent implements OnInit {
   ngOnInit(): void {
     this.cartItems$ = this.cartService.items$;
     this.cartSubtotal$ = this.cartService.getCartSubtotal();
-
+    
     // Example for total amount if including other costs:
     // this.totalOrderAmount$ = this.cartSubtotal$.pipe(
     //   map(subtotal => subtotal + this.shippingCost + this.taxes)

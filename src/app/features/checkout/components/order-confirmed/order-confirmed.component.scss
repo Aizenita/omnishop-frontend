@@ -1,0 +1,13 @@
+.order-confirmed-container {
+  min-height: 70vh; // Ensure it takes substantial height
+  padding: 2rem;
+  display: flex; // Ensure p-d-flex works if PrimeFlex not global
+  justify-content: center; // Ensure p-jc-center works
+  align-items: center; // Ensure p-ai-center works
+
+  p-card {
+    width: 100%;
+    max-width: 500px;
+  }
+}
+// PrimeFlex classes p-d-flex, p-jc-center, p-ai-center, p-text-center, p-mb-3 used.
