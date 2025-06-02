@@ -11,7 +11,7 @@ import { DireccionFormComponent } from './features/profile/components/direccion-
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { CheckoutSuccessComponent } from './features/checkout/components/checkout-success/checkout-success.component'; // Added
 import { CheckoutFailureComponent } from './features/checkout/components/checkout-failure/checkout-failure.component'; // Added
-
+import {MockRedsysComponent} from './auth/mock-redsys/mock-redsys.component';
 export const routes: Routes = [
   { path: '', component: LandingPageComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -44,6 +44,11 @@ export const routes: Routes = [
     path: 'pago-ko', // Matches backend redirect
     component: CheckoutFailureComponent,
     canActivate: [authGuard]
-  }
+  },
+  {
+  path: 'mock-redsys',
+  component: MockRedsysComponent,
+  canActivate: [authGuard]
+}
 ];
 
