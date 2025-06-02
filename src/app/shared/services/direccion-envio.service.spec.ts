@@ -66,8 +66,8 @@ describe('DireccionEnvioService', () => {
     it('should return an Observable<DireccionEnvio> for updated address', () => {
       const addressId = 1;
       const updateData: DireccionEnvioUpdate = { calle: 'Calle Falsa 123 Modificada', predeterminada: true };
-      const mockUpdatedDireccion: DireccionEnvio = {
-        id: addressId, usuarioId: 1, calle: 'Calle Falsa 123 Modificada', ciudad: 'Springfield', cp: '12345', pais: 'USA', predeterminada: true
+      const mockUpdatedDireccion: DireccionEnvio = { 
+        id: addressId, usuarioId: 1, calle: 'Calle Falsa 123 Modificada', ciudad: 'Springfield', cp: '12345', pais: 'USA', predeterminada: true 
       };
 
       service.actualizarDireccion(addressId, updateData).subscribe(direccion => {

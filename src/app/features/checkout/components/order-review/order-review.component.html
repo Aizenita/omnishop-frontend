@@ -1,6 +1,6 @@
 <div class="order-review-container">
   <h3 class="p-mb-3">Revisión de tu Pedido</h3>
-
+  
   <ng-container *ngIf="(cartItems$ | async) as items; else emptyCart">
     <div *ngIf="items.length > 0; else emptyCart">
       <p-table [value]="items" styleClass="p-datatable-sm">
@@ -16,7 +16,7 @@
           <tr>
             <td>
               <div class="product-info p-d-flex p-ai-center">
-                <img [src]="item.imagen || 'https://via.placeholder.com/60'"
+                <img [src]="item.imagen || 'https://via.placeholder.com/60'" 
                      [alt]="item.nombre" class="product-image p-mr-2"/>
                 <span>{{ item.nombre }}</span>
               </div>

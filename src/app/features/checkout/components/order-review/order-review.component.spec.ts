@@ -30,10 +30,10 @@ describe('OrderReviewComponent', () => {
 
     fixture = TestBed.createComponent(OrderReviewComponent);
     component = fixture.componentInstance;
-
+    
     mockCartService.items$.next(mockCartItems);
     (mockCartService.getCartSubtotal() as BehaviorSubject<number>).next(mockSubtotal);
-
+    
     fixture.detectChanges(); // ngOnInit
   });
 
